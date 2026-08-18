@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GGCW Portal - Institutional Gateway</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/index.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg institutional-navbar shadow-sm w-100">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold text-white tracking-wide" href="#">
+                <i class="fas fa-university text-warning me-2"></i>GGCW PORTAL DESK
+            </a>
+            <span class="navbar-text text-white-50 small">Official Feedback & Complaint Management System</span>
+        </div>
+    </nav>
+
+    <div class="container main-portal-wrapper d-flex flex-column justify-content-center align-items-center flex-grow-1 py-5">
+        
+        <div id="homeCardsSection" class="w-100 text-center view-panel active">
+            <div class="mb-4">
+                <h1 class="fw-extrabold main-title-text m-0">Welcome To GGCW Feedback & Complaint Portal</h1>
+                <div class="title-accent-bar mx-auto mt-2"></div>
+            </div>
+
+            <div class="logo-space-holder mb-5">
+                <img src="assets/img/logo.jpg" alt="GGCW Corporate Seal" class="main-institutional-crest shadow-lg">
+            </div>
+
+            <div class="row g-4 w-100 master-layout-lock justify-content-center px-2 mx-auto">
+                <div class="col-xl-4 col-md-6">
+                    <div class="card terminal-box text-white p-4 shadow-lg">
+                        <div class="portal-avatar-icon mb-3"><i class="fas fa-user-graduate"></i></div>
+                        <h4 class="fw-bold mb-3 card-header-title">Student Desk</h4>
+                        <button class="btn btn-gold-action w-100 fw-bold mb-3 py-2" onclick="togglePortalView('studentLoginSection')">Student Login</button>
+                        <div class="signup-trigger-area"><a href="#" class="portal-signup-link" onclick="togglePortalView('studentSignUpSection')">Sign-up</a></div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-md-6">
+                    <div class="card terminal-box text-white p-4 shadow-lg">
+                        <div class="portal-avatar-icon mb-3"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <h4 class="fw-bold mb-3 card-header-title">Teacher Desk</h4>
+                        <button class="btn btn-gold-action w-100 fw-bold mb-3 py-2" onclick="togglePortalView('teacherLoginSection')">Teacher Login</button>
+                        <div class="signup-trigger-area"><a href="#" class="portal-signup-link" onclick="togglePortalView('teacherSignUpSection')">Sign-up</a></div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-md-6">
+                    <div class="card terminal-box admin-gate-override text-white p-4 shadow-lg d-flex flex-column justify-content-center">
+                        <div class="portal-avatar-icon mb-3"><i class="fas fa-user-shield"></i></div>
+                        <h4 class="fw-bold mb-3 card-header-title">Admin Desk</h4>
+                        <button class="btn btn-danger-action w-100 fw-bold py-2" onclick="togglePortalView('adminLoginSection')">Admin Login</button>
+                        <div class="signup-trigger-area py-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="studentLoginSection" class="w-100 view-panel">
+            <div class="card form-container-desk mx-auto shadow-lg text-start border-0 p-4">
+                <button class="btn btn-link back-link-btn ps-0 mb-3 text-decoration-none fw-bold" onclick="togglePortalView('homeCardsSection')">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Main View
+                </button>
+                <div class="text-center mb-4">
+                    <i class="fas fa-sign-in-alt fa-2x text-success mb-2"></i>
+                    <h3 class="fw-bold text-success m-0">Student Login</h3>
+                </div>
+                <form onsubmit="validateStudentLogin(event)">
+                    <div class="mb-3"><label class="form-label small fw-bold">Email Address</label><input type="email" id="studentLogEmail" class="form-control" placeholder="Enter student email" required></div>
+                    <div class="mb-2"><label class="form-label small fw-bold">Password</label><input type="password" id="studentLogPassword" class="form-control" placeholder="Enter password" required></div>
+                    <div class="mb-3 text-end"><a href="#" class="text-secondary small text-decoration-none" onclick="alert('Password reset link triggered. Contact department admin.')"><i class="fas fa-key me-1"></i>Forgot Password?</a></div>
+                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-2 py-2.5 shadow">Login</button>
+                    <div class="text-center mt-3 small">Don't have an account? <a href="#" class="text-success fw-bold text-decoration-none" onclick="togglePortalView('studentSignUpSection')">Sign-up</a></div>
+                </form>
+            </div>
+        </div>
+
+        <div id="studentSignUpSection" class="w-100 view-panel">
+            <div class="card form-container-desk mx-auto shadow-lg text-start border-0 p-4">
+                <button class="btn btn-link back-link-btn ps-0 mb-3 text-decoration-none fw-bold" onclick="togglePortalView('homeCardsSection')">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Main View
+                </button>
+                <div class="text-center mb-4">
+                    <i class="fas fa-user-plus fa-2x text-success mb-2"></i>
+                    <h3 class="fw-bold text-success m-0">Student Registration Desk</h3>
+                </div>
+                <form onsubmit="validateStudentSignUp(event)" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-sm-6"><label class="form-label small fw-bold">Student Full Name</label><input type="text" id="studName" class="form-control" placeholder="Enter full name" required></div>
+                        <div class="col-sm-6"><label class="form-label small fw-bold">Father Name</label><input type="text" id="studFather" class="form-control" placeholder="Enter father name" required></div>
+                        <div class="col-sm-6"><label class="form-label small fw-bold">University / College Roll No</label><input type="text" id="studRoll" class="form-control" placeholder="e.g. 78235" required></div>
+                        <div class="col-sm-6">
+                            <label class="form-label small fw-bold">Department</label>
+                            <select id="studDept" class="form-select form-control" required>
+                                <option value="" selected disabled>Select Department</option>
+                                <option>IT</option><option>Computer Science</option><option>Psychology</option><option>Maths</option><option>Economics</option><option>Education</option><option>Chemistry</option><option>English</option><option>Botony</option><option>Zology</option><option>Physics</option><option>Communication Studies</option><option>Commerce</option><option>Islamyaat</option><option>Inter</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6"><label class="form-label small fw-bold">Email Address</label><input type="email" id="studEmail" class="form-control" placeholder="name@college.edu" required></div>
+                        <div class="col-sm-6"><label class="form-label small fw-bold">Create Password</label><input type="password" id="studPassword" class="form-control" placeholder="Choose password" required></div>
+                        <div class="col-100"><label class="form-label small fw-bold">Upload College ID Card Photo <span class="text-danger">*</span></label><input type="file" id="studCardImg" class="form-control" accept="image/*" required></div>
+                    </div>
+                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-4 py-2.5 shadow"><i class="fas fa-database me-1"></i> Register</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="teacherLoginSection" class="w-100 view-panel">
+            <div class="card form-container-desk mx-auto shadow-lg text-start border-0 p-4">
+                <button class="btn btn-link back-link-btn ps-0 mb-3 text-decoration-none fw-bold" onclick="togglePortalView('homeCardsSection')">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Main View
+                </button>
+                <div class="text-center mb-4">
+                    <i class="fas fa-sign-in-alt fa-2x text-success mb-2"></i>
+                    <h3 class="fw-bold text-success m-0">Faculty Login</h3>
+                </div>
+                <form onsubmit="validateTeacherLogin(event)">
+                    <div class="mb-3"><label class="form-label small fw-bold">Official Email ID</label><input type="email" id="teacherLogEmail" class="form-control" placeholder="faculty@ggcw.edu.pk" required></div>
+                    <div class="mb-2"><label class="form-label small fw-bold">Password</label><input type="password" id="teacherLogPassword" class="form-control" placeholder="Enter password" required></div>
+                    <div class="mb-3 text-end"><a href="#" class="text-secondary small text-decoration-none" onclick="alert('Password reset link triggered. Contact department admin.')"><i class="fas fa-key me-1"></i>Forgot Password?</a></div>
+                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-2 py-2.5 shadow">Login</button>
+                    <div class="text-center mt-3 small">Don't have an account? <a href="#" class="text-success fw-bold text-decoration-none" onclick="togglePortalView('teacherSignUpSection')">Sign-up</a></div>
+                </form>
+            </div>
+        </div>
+
+        <div id="teacherSignUpSection" class="w-100 view-panel">
+            <div class="card form-container-desk mx-auto shadow-lg text-start border-0 p-4">
+                <button class="btn btn-link back-link-btn ps-0 mb-3 text-decoration-none fw-bold" onclick="togglePortalView('homeCardsSection')">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Main View
+                </button>
+                <div class="text-center mb-4">
+                    <i class="fas fa-user-tie fa-2x text-success mb-2"></i>
+                    <h3 class="fw-bold text-success m-0">Faculty Registration Desk</h3>
+                </div>
+                <form onsubmit="validateTeacherSignUp(event)" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-sm-6"><label class="form-label small fw-bold">Full Name</label><input type="text" id="teachName" class="form-control" placeholder="Enter full name" required></div>
+                        <div class="col-sm-6">
+                            <label class="form-label small fw-bold">Department</label>
+                            <select id="teachDept" class="form-select form-control" required>
+                                <option value="" selected disabled>Select Department</option>
+                                <option>IT</option><option>Computer Science</option><option>Psychology</option><option>Maths</option><option>Economics</option><option>Education</option><option>Chemistry</option><option>English</option><option>Botony</option><option>Zology</option><option>Physics</option><option>Communication Studies</option><option>Commerce</option><option>Islamyaat</option><option>Inter</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6"><label class="form-label small fw-bold">Official Email ID</label><input type="email" id="teachEmail" class="form-control" placeholder="faculty@ggcw.edu.pk" required></div>
+                        <div class="col-sm-6"><label class="form-label small fw-bold">Create Password</label><input type="password" id="teachPassword" class="form-control" placeholder="Choose security password" required></div>
+                        <div class="col-100"><label class="form-label small fw-bold">Upload Your Original ID Card Photo <span class="text-danger">*</span></label><input type="file" id="teachCardImg" class="form-control" accept="image/*" required></div>
+                    </div>
+                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-4 py-2.5 shadow"><i class="fas fa-database me-1"></i> Register</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="adminLoginSection" class="w-100 view-panel">
+            <div class="card form-container-desk mx-auto shadow-lg text-start border-0 p-4 admin-border-top">
+                <button class="btn btn-link back-link-btn text-danger ps-0 mb-3 text-decoration-none fw-bold" onclick="togglePortalView('homeCardsSection')">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Main View
+                </button>
+                <div class="text-center mb-4">
+                    <i class="fas fa-lock fa-2x text-danger mb-2"></i>
+                    <h3 class="fw-bold text-danger m-0">Admin Secure Login</h3>
+                </div>
+                <form onsubmit="validateAdminLogin(event)">
+                    <div class="mb-3"><label class="form-label small fw-bold text-dark">System Email ID</label><input type="email" id="adminEmail" class="form-control" placeholder="admin@ggcw.edu.pk" required></div>
+                    <div class="mb-3"><label class="form-label small fw-bold text-dark">Master Password</label><input type="password" id="adminPassword" class="form-control" placeholder="Enter root password" required></div>
+                    <button type="submit" class="btn btn-danger w-100 fw-bold mt-2 py-2.5 shadow">Secure Login</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const PRIMARY_URL = 'http://127.0.0.1:8000/api';
+        const FALLBACK_URL = 'http://localhost:8000/api';
+
+        function togglePortalView(targetId) {
+            document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById(targetId).classList.add('active');
+        }
+
+        const nameRegex = /^[A-Za-z\s]+$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        
+        function checkName(value, fieldName) {
+            if (!value.trim()) { alert(`${fieldName} cannot be empty!`); return false; }
+            if (!nameRegex.test(value)) { alert(`${fieldName} must contain alphabets only.`); return false; }
+            return true;
+        }
+
+        function checkEmail(value) {
+            if (!emailRegex.test(value)) { alert("Enter a valid professional email structure!"); return false; }
+            return true;
+        }
+
+        function executeNetworkPayload(endpoint, method, bodyPayload, isFormData, successCallback) {
+            let options = { method: method, body: bodyPayload };
+            if (!isFormData) {
+                options.headers = { 'Content-Type': 'application/json' };
+            }
+
+            fetch(`${PRIMARY_URL}${endpoint}`, options)
+            .then(res => res.json())
+            .then(data => successCallback(data))
+            .catch(() => {
+                fetch(`${FALLBACK_URL}${endpoint}`, options)
+                .then(res => res.json())
+                .then(data => successCallback(data))
+                .catch(err => {
+                    console.error("Critical Network Error:", err);
+                    alert("Network Pipeline Error: Cannot connect to backend server.");
+                });
+            });
+        }
+
+        // 1. Student Sign Up
+        function validateStudentSignUp(event) {
+            event.preventDefault();
+            let name = document.getElementById('studName').value;
+            let fatherName = document.getElementById('studFather').value;
+            let rollNo = document.getElementById('studRoll').value; // Ab digits save honge direct
+            let department = document.getElementById('studDept').value; // Dynamic Dropdown Value
+            let email = document.getElementById('studEmail').value;
+            let password = document.getElementById('studPassword').value;
+            let fileInput = document.getElementById('studCardImg');
+
+            if (!checkName(name, "Student Name") || !checkName(fatherName, "Father Name") || !checkEmail(email)) return;
+            if (password.length < 8) { alert("Password must be at least 8 characters!"); return; }
+            if (fileInput.files.length === 0) { alert("ID card file is mandatory."); return; }
+
+            let formData = new FormData();
+            formData.append('name', name);
+            formData.append('father_name', fatherName);
+            formData.append('roll', rollNo); // Fixed key name for laravel matching
+            formData.append('department', department); // Appending dynamic selected department
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('role', 'student');
+            formData.append('card_image', fileInput.files[0]);
+
+            executeNetworkPayload('/auth/register', 'POST', formData, true, (data) => {
+                if (data.success) {
+                    alert("Account submitted and saved permanently in database! Please wait for Admin Verification.");
+                    togglePortalView('studentLoginSection');
+                } else {
+                    alert("Registration Refused: " + (data.error || "Check backend database fields."));
+                }
+            });
+        }
+
+        // 2. Student Login (Redirect Lock Fixed)
+        function validateStudentLogin(event) {
+            event.preventDefault();
+            let email = document.getElementById('studentLogEmail').value;
+            let password = document.getElementById('studentLogPassword').value;
+            if (!checkEmail(email)) return;
+
+            let payload = JSON.stringify({ email: email, password: password, role: 'student' });
+            executeNetworkPayload('/auth/login', 'POST', payload, false, (data) => {
+                if (data.success) {
+                    alert("Verification complete! Redirecting to Student Dashboard Workspace...");
+                    localStorage.setItem('user_role', data.role);
+                    localStorage.setItem('user_details', JSON.stringify(data.user));
+                    window.location.href = '/student-dashboard.html'; // Dynamic Redirection
+                } else {
+                    alert(data.error || "Credentials unmatched.");
+                }
+            });
+        }
+
+        // 3. Teacher Sign Up
+        function validateTeacherSignUp(event) {
+            event.preventDefault();
+            let name = document.getElementById('teachName').value;
+            let department = document.getElementById('teachDept').value;
+            let email = document.getElementById('teachEmail').value;
+            let password = document.getElementById('teachPassword').value;
+            let fileInput = document.getElementById('teachCardImg');
+
+            if (!checkName(name, "Faculty Name") || !checkEmail(email)) return;
+            if (password.length < 8) { alert("Password must be at least 8 characters."); return; }
+            if (fileInput.files.length === 0) { alert("ID Image upload required."); return; }
+
+            let formData = new FormData();
+            formData.append('name', name);
+            formData.append('department', department); // Appending selected department
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('role', 'teacher');
+            formData.append('card_image', fileInput.files[0]);
+
+            executeNetworkPayload('/auth/register', 'POST', formData, true, (data) => {
+                if (data.success) {
+                    alert("Faculty Account saved permanently! Please wait for Admin Verification.");
+                    togglePortalView('teacherLoginSection');
+                } else {
+                    alert("Error: " + (data.error || "Execution dropped."));
+                }
+            });
+        }
+
+        // 4. Teacher Login (Redirect Lock Fixed)
+        function validateTeacherLogin(event) {
+            event.preventDefault();
+            let email = document.getElementById('teacherLogEmail').value;
+            let password = document.getElementById('teacherLogPassword').value;
+            if (!checkEmail(email)) return;
+
+            let payload = JSON.stringify({ email: email, password: password, role: 'teacher' });
+            executeNetworkPayload('/auth/login', 'POST', payload, false, (data) => {
+                if (data.success) {
+                    alert("Verification complete! Redirecting to Faculty Dashboard Workspace...");
+                    localStorage.setItem('user_role', data.role);
+                    localStorage.setItem('user_details', JSON.stringify(data.user));
+                    window.location.href = '/teacher-dashboard.html'; // Dynamic Redirection
+                } else {
+                    alert(data.error || "Credentials unmatched.");
+                }
+            });
+        }
+
+        // 5. Admin Login Validation
+        function validateAdminLogin(event) {
+            event.preventDefault();
+            let email = document.getElementById('adminEmail').value;
+            let password = document.getElementById('adminPassword').value;
+            if (!checkEmail(email)) return;
+
+            let payload = JSON.stringify({ email: email, password: password, role: 'admin' });
+            executeNetworkPayload('/auth/login', 'POST', payload, false, (data) => {
+                if (data.success) {
+                    alert("Verification complete! Redirecting to Admin Control Dashboard...");
+                    localStorage.setItem('user_role', data.role);
+                    localStorage.setItem('user_details', JSON.stringify(data.user));
+                    window.location.href = '/admin-dashboard.html';
+                } else {
+                    alert(data.error || "Invalid Admin Credentials.");
+                }
+            });
+        }
+    </script>
+
+    <footer class="text-center py-4 mt-5 small text-white" style="background-color: #0A2540; border-top: 3px solid #FFC107;">
+        <div class="container">
+            <p class="mb-1 fw-semibold">&copy; Government Graduate College for Women, Gujranwala.</p>
+            <p class="mb-0 text-white-50">Official Institutional Portal &bull; Secure Feedback & Complaint Desk</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,197 @@
+/* Custom Corporate Aesthetic Identity Mapping */
+:root {
+    --ggcw-primary-green: #076833;
+    --ggcw-gold-accent: #f4c430;
+    --ggcw-dark-green: #0a2916;
+    --ggcw-royal-blue: #0b4f8c;
+    --ggcw-crimson-red: #731118;
+    --portal-light-bg: #edf3f0;
+    --portal-blue-bg: #e5edf5;
+}
+
+body {
+    background: linear-gradient(135deg, var(--portal-light-bg) 0%, var(--portal-blue-bg) 100%) !important;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Header Navbar Styling */
+.institutional-navbar {
+    background: linear-gradient(90deg, var(--ggcw-primary-green) 0%, var(--ggcw-royal-blue) 100%) !important;
+    border-bottom: 4px solid var(--ggcw-gold-accent);
+}
+
+.tracking-wide {
+    letter-spacing: 0.8px;
+}
+
+/* Dynamic Switching Mechanics */
+.view-panel {
+    display: none;
+}
+
+.view-panel.active {
+    display: block;
+    animation: smoothPanelFadeIn 0.4s ease forwards;
+}
+
+/* Central layout structure */
+.main-portal-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.main-title-text {
+    color: var(--ggcw-primary-green);
+    font-size: 2.3rem;
+    font-weight: 800 !important;
+    text-transform: uppercase;
+}
+
+.title-accent-bar {
+    height: 5px;
+    width: 220px;
+    background: linear-gradient(90deg, var(--ggcw-gold-accent), var(--ggcw-royal-blue));
+    border-radius: 10px;
+}
+
+.main-institutional-crest {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    padding: 5px;
+    border: 4px solid var(--ggcw-primary-green);
+    object-fit: contain;
+}
+
+.master-layout-lock {
+    max-width: 1100px;
+}
+
+/* Role Terminal Cards Custom Rules */
+.terminal-box {
+    background: linear-gradient(145deg, var(--ggcw-dark-green) 0%, #114224 100%) !important;
+    border: none !important;
+    border-radius: 16px !important;
+    border-bottom: 5px solid var(--ggcw-gold-accent) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 250px;
+}
+
+.admin-gate-override {
+    background: linear-gradient(145deg, #3d070b 0%, var(--ggcw-crimson-red) 100%) !important;
+    border-bottom: 5px solid #ff4d5a !important;
+}
+
+.terminal-box:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(11, 79, 140, 0.15) !important;
+}
+
+.card-header-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.portal-avatar-icon {
+    font-size: 2.8rem;
+    color: var(--ggcw-gold-accent);
+}
+
+/* White Form Container Specific Settings */
+.form-container-desk {
+    max-width: 650px;
+    background-color: #ffffff !important;
+    border-radius: 20px !important;
+    border-top: 6px solid var(--ggcw-primary-green) !important;
+}
+
+.admin-border-top {
+    border-top: 6px solid var(--ggcw-crimson-red) !important;
+}
+
+.text-success {
+    color: var(--ggcw-primary-green) !important;
+}
+
+.back-link-btn {
+    color: var(--ggcw-royal-blue) !important;
+}
+
+/* Inputs Formatting System */
+.form-control, .form-select {
+    background-color: #f8faf9;
+    border: 1px solid #ceded4;
+    color: #222222;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #ffffff;
+    border-color: var(--ggcw-primary-green);
+    box-shadow: 0 0 0 0.25rem rgba(7, 104, 51, 0.12);
+}
+
+/* Dynamic Buttons overrides */
+.btn-gold-action {
+    background-color: var(--ggcw-gold-accent) !important;
+    color: #0d2114 !important;
+    border: none !important;
+}
+
+.btn-gold-action:hover {
+    background-color: #e0b322 !important;
+}
+
+.btn-danger-action {
+    background-color: #ffffff !important;
+    color: var(--ggcw-crimson-red) !important;
+    border: none !important;
+}
+
+.btn {
+    border-radius: 8px !important;
+    font-size: 0.95rem;
+    font-weight: 700 !important;
+}
+
+/* Sign up triggers custom links */
+.portal-signup-link {
+    color: var(--ggcw-gold-accent) !important;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-block;
+}
+
+.portal-signup-link:hover {
+    color: #ffffff !important;
+    text-decoration: underline !important;
+}
+
+/* Footer Section */
+.institutional-footer {
+    background-color: #ffffff;
+    border-top: 1px solid #d2ded6 !important;
+    margin-top: auto;
+}
+
+.footer-corporate-text {
+    color: #2b3b31;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+@keyframes smoothPanelFadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}

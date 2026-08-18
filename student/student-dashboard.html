@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GGCW Portal - Student Desk</title>
+    <!-- Bootstrap 5 Framework -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Links to External Separate Stylesheet -->
+    <link rel="stylesheet" href="../assets/css/student-dashboard.css">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-white m-0 p-0">
+
+    <!-- BLUE BAR TOP NAVIGATION HEADER -->
+    <nav class="navbar navbar-expand exact-blue-topbar py-3 shadow-sm m-0 border-0">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center w-100">
+                <!-- Right Aligned Main Dashboard Controls -->
+                <div class="d-flex gap-3 ms-auto align-items-center">
+                    <button class="btn exact-pill-btn" onclick="showFormPanel(true)">
+                        Complaint & feedback
+                    </button>
+                    <button class="btn exact-pill-btn" onclick="showComplaintsTable(true)">
+                        See Your History
+                    </button>
+                    <a href="index.html" class="btn exact-pill-btn btn-logout-pill d-flex align-items-center justify-content-center">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT LAYOUT LAYER -->
+    <div class="w-100 p-0 m-0">
+
+        <!-- Image Container with Fixed Height Control -->
+        <div class="exact-hero-container w-100 m-0 p-0">
+            <img src="../assets/img/bg.png" alt="GGCW Campus Aud" class="exact-hero-image w-100 m-0 p-0">
+            
+            <div class="exact-hero-overlay-text text-center text-white">
+                <h2 class="fw-bold m-0 text-white">We Are United</h2>
+                <p class="m-0 mt-1 text-white-50 small">We dream big!</p>
+                <div class="exact-slider-dots d-flex justify-content-center gap-1 mt-2">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Welcome Title Section -->
+        <div class="w-100 text-center my-4 py-2">
+            <h2 class="fw-bold text-dark m-0" style="font-size: 2.2rem; font-family: sans-serif;">Welcome To Our <span class="text-primary">College</span></h2>
+        </div>
+
+        <!-- PANEL 1: INTERACTIVE FORM HOLDER -->
+        <div id="formCapturePanel" class="container mb-5">
+            <div class="card form-container-desk mx-auto shadow border-0 p-4" style="max-width: 600px;">
+                
+                <!-- DUAL SELECTION TABS -->
+                <div class="d-flex border-bottom mb-4 exact-form-tabs">
+                    <button id="tabComplaint" class="w-50 fw-bold py-2.5 active" onclick="switchFormTab('complaint')">
+                        Submit Complaint
+                    </button>
+                    <button id="tabFeedback" class="w-50 fw-bold py-2.5" onclick="switchFormTab('feedback')">
+                        Submit Feedback
+                    </button>
+                </div>
+
+                <!-- SUB-PANEL A: COMPLAINTS FORM -->
+                <div id="complaintFormWrapper">
+                    <form id="complaintMainForm" onsubmit="event.preventDefault(); handleSubmission('complaint');">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-dark small m-1">Student Roll No:</label>
+                            <input type="text" id="complaintRoll" class="form-control bg-white text-dark border" placeholder="Enter your Roll No" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-dark small m-1">Category:</label>
+                            <select id="complaintCategory" class="form-select bg-white text-dark border" required>
+                                <option value="Academic">Academic</option>
+                                <option value="Financial">Financial</option>
+                                <option value="Infrastructure">Infrastructure</option>
+                                <option value="Facilities">Facilities</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-dark small m-1">Enter your complaint:</label>
+                            <textarea id="complaintText" class="form-control bg-white text-dark border" rows="4" placeholder="Type your complaint here..." required></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark small m-1">Upload Photo:</label>
+                            <input type="file" class="form-control bg-white text-dark border">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2.5 exact-submit-btn">Submit Complaint</button>
+                    </form>
+                </div>
+
+                <!-- SUB-PANEL B: FEEDBACK FORM -->
+                <div id="feedbackFormWrapper" style="display: none;">
+                    <form id="feedbackMainForm" onsubmit="event.preventDefault(); handleSubmission('feedback');">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-dark small m-1">Student Roll No:</label>
+                            <input type="text" id="feedbackRoll" class="form-control bg-white text-dark border" placeholder="Enter your Roll No" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark small m-1">Enter your feedback:</label>
+                            <textarea id="feedbackText" class="form-control bg-white text-dark border" rows="5" placeholder="Type your valuable feedback here..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2.5 exact-submit-btn">Submit Feedback</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- PANEL 2: SUCCESS RECEIVED SCREEN -->
+        <div id="successResponsePanel" class="container mb-5" style="display: none;">
+            <div class="w-100 py-5 bg-white text-center">
+                <div class="py-4 bg-light text-center shadow-sm border-top border-bottom mb-5 generic-msg-wrapper">
+                    <h1 id="successDynamicText" class="fw-bold text-secondary m-0 letter-spacing-1" style="font-size: 2.2rem; font-family: sans-serif;">
+                        YOUR COMPLAINT HAS BEEN RECEIVED!
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 3: HISTORY GRID PANEL (COMPLAINTS & FEEDBACK) -->
+        <div id="complaintsTablePanel" class="container-fluid px-4 mb-5" style="display: none;">
+            
+            <!-- HISTORY TYPE SELECTION MINI-TABS -->
+            <div class="d-flex justify-content-center gap-3 mb-4">
+                <button id="historyTabComplaints" class="btn btn-outline-primary active fw-bold px-4 py-2" onclick="switchHistoryView('complaints')">
+                    <i class="fas fa-exclamation-circle me-1"></i> My Complaints (<span id="complaintBadgeCount">0</span>)
+                </button>
+                <button id="historyTabFeedback" class="btn btn-outline-primary fw-bold px-4 py-2" onclick="switchHistoryView('feedback')">
+                    <i class="fas fa-comment-alt me-1"></i> My Feedback (<span id="feedbackBadgeCount">0</span>)
+                </button>
+            </div>
+
+            <!-- COMPLAINTS VIEW WRAPPER -->
+            <div id="complaintsViewSubSection">
+                <!-- Simplified 3-Status Legend Box Header -->
+                <div class="legend-box mx-auto p-3 mb-4 shadow-sm">
+                    <div class="small mb-1"><span class="color-indicator bg-legend-green"></span><strong>Resolved:</strong> Green</div>
+                    <div class="small mb-1"><span class="color-indicator bg-legend-yellow"></span><strong>Pending:</strong> Yellow</div>
+                    <div class="small"><span class="color-indicator bg-legend-red"></span><strong>Unresolved:</strong> Red</div>
+                </div>
+
+                <!-- Responsive Table Render Layout -->
+                <div class="table-responsive shadow-sm">
+                    <table class="table exact-table w-100 m-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 20%;">Complaint</th>
+                                <th style="width: 25%;">Category</th>
+                                <th style="width: 30%;">Date</th>
+                                <th style="width: 25%;">Action Taken</th>
+                            </tr>
+                        </thead>
+                        <tbody id="complaintsTableBody">
+                            <!-- Student's personal complaints will dynamic append here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="emptyComplaintsMsg" class="text-center text-muted my-4">You have not submitted any complaint yet.</div>
+            </div>
+
+            <!-- FEEDBACK VIEW WRAPPER -->
+            <div id="feedbackViewSubSection" style="display: none;">
+                <div class="table-responsive shadow-sm">
+                    <table class="table exact-table w-100 m-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Feedback View</th>
+                                <th style="width: 50%;">Submission Date</th>
+                                <th style="width: 25%;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feedbackTableBody">
+                            <!-- Student's personal feedback will dynamic append here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="emptyFeedbackMsg" class="text-center text-muted my-4">You have not submitted any feedback yet.</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- BOOTSTRAP MODAL FOR SHOWING COMPLAINT/FEEDBACK DETAILS -->
+    <div class="modal fade" id="complaintViewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header exact-blue-topbar text-white py-3">
+                    <h5 class="modal-title fw-bold text-white" id="modalMainTitle"><i class="fas fa-file-alt me-2"></i> Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-dark bg-white">
+                    <div class="mb-3" id="modalCategoryWrapper">
+                        <strong class="text-secondary small text-uppercase">Category:</strong>
+                        <p id="modalCategory" class="fw-bold text-dark m-0 fs-5"></p>
+                    </div>
+                    <div class="mb-3">
+                        <strong class="text-secondary small text-uppercase">Submission Date:</strong>
+                        <p id="modalDate" class="text-muted m-0"></p>
+                    </div>
+                    <div class="mb-3">
+                        <strong class="text-secondary small text-uppercase">Current Status:</strong>
+                        <div class="mt-1"><span id="modalStatusBadge" class="badge px-3 py-2 fs-6 fw-bold"></span></div>
+                    </div>
+                    <hr class="text-muted">
+                    <div>
+                        <strong id="modalContentLabel" class="text-secondary small text-uppercase">Complaint Statement:</strong>
+                        <p id="modalDescription" class="mt-1 text-dark bg-light p-3 rounded border" style="line-height: 1.6;"></p>
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let complaintCount = 0;
+        let feedbackCount = 0;
+
+        // Initialize state configuration for browser tracking
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!window.history.state) {
+                window.history.replaceState({ panel: 'form' }, '', '');
+                window.history.pushState({ panel: 'form' }, '', '');
+            }
+            updateEmptyPlaceholders();
+        });
+
+        // Global Popstate Handler listens directly to Browser's own Top Left Back button click event
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.panel) {
+                if (event.state.panel === 'table') {
+                    showComplaintsTable(false);
+                } else if (event.state.panel === 'success') {
+                    showSuccessPanel(false);
+                } else {
+                    showFormPanel(false);
+                }
+            } else {
+                showFormPanel(false);
+            }
+        });
+
+        // Tab switching function inside form card
+        function switchFormTab(target) {
+            const complaintTab = document.getElementById('tabComplaint');
+            const feedbackTab = document.getElementById('tabFeedback');
+            const complaintWrapper = document.getElementById('complaintFormWrapper');
+            const feedbackWrapper = document.getElementById('feedbackFormWrapper');
+
+            if (target === 'complaint') {
+                complaintTab.classList.add('active');
+                feedbackTab.classList.remove('active');
+                complaintWrapper.style.display = 'block';
+                feedbackWrapper.style.display = 'none';
+            } else {
+                feedbackTab.classList.add('active');
+                complaintTab.classList.remove('active');
+                feedbackWrapper.style.display = 'block';
+                complaintWrapper.style.display = 'none';
+            }
+        }
+
+        // Toggle history view between Complaints and Feedback lists
+        function switchHistoryView(type) {
+            const compBtn = document.getElementById('historyTabComplaints');
+            const feedBtn = document.getElementById('historyTabFeedback');
+            const compSec = document.getElementById('complaintsViewSubSection');
+            const feedSec = document.getElementById('feedbackViewSubSection');
+
+            if (type === 'complaints') {
+                compBtn.classList.add('active');
+                feedBtn.classList.remove('active');
+                compSec.style.display = 'block';
+                feedSec.style.display = 'none';
+            } else {
+                feedBtn.classList.add('active');
+                compBtn.classList.remove('active');
+                feedSec.style.display = 'block';
+                compSec.style.display = 'none';
+            }
+        }
+
+        // Check and toggle empty messages dynamically
+        function updateEmptyPlaceholders() {
+            document.getElementById('emptyComplaintsMsg').style.display = (complaintCount === 0) ? 'block' : 'none';
+            document.getElementById('emptyFeedbackMsg').style.display = (feedbackCount === 0) ? 'block' : 'none';
+            document.getElementById('complaintBadgeCount').innerText = complaintCount;
+            document.getElementById('feedbackBadgeCount').innerText = feedbackCount;
+        }
+
+        // Handle form submission routing & Realtime personal append injection
+        function handleSubmission(type) {
+            const textElement = document.getElementById('successDynamicText');
+            const now = new Date();
+            const formattedDate = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear() + ', ' + 
+                                  now.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true }).toLowerCase();
+
+            if (type === 'complaint') {
+                textElement.innerText = "YOUR COMPLAINT HAS BEEN RECEIVED!";
+                
+                const catVal = document.getElementById('complaintCategory').value;
+                const textVal = document.getElementById('complaintText').value;
+                const cleanText = textVal.replace(/'/g, "\\'");
+                
+                complaintCount++;
+                
+                const tableBody = document.getElementById('complaintsTableBody');
+                const newRow = document.createElement('tr');
+                newRow.className = "exact-status-red";
+                
+                newRow.innerHTML = `
+                    <td><button class="btn btn-show-complaint" onclick="viewComplaintDetails('${catVal}', '${formattedDate}', 'Unresolved', '${cleanText}')">Show Complaint</button></td>
+                    <td>${catVal}</td>
+                    <td>${formattedDate}</td>
+                    <td>Unresolved</td>
+                `;
+                
+                tableBody.insertBefore(newRow, tableBody.firstChild);
+                document.getElementById('complaintMainForm').reset();
+            } else {
+                textElement.innerText = "YOUR FEEDBACK HAS BEEN RECEIVED THANK YOU!";
+                
+                const feedTextVal = document.getElementById('feedbackText').value;
+                const cleanFeedText = feedTextVal.replace(/'/g, "\\'");
+                
+                feedbackCount++;
+                
+                const feedTableBody = document.getElementById('feedbackTableBody');
+                const newRow = document.createElement('tr');
+                newRow.className = "exact-status-green"; // Feedbacks are generally acknowledged instantly
+                
+                newRow.innerHTML = `
+                    <td><button class="btn btn-show-complaint" onclick="viewFeedbackDetails('${formattedDate}', '${cleanFeedText}')">Show Feedback</button></td>
+                    <td>${formattedDate}</td>
+                    <td>Submitted</td>
+                `;
+                
+                feedTableBody.insertBefore(newRow, feedTableBody.firstChild);
+                document.getElementById('feedbackMainForm').reset();
+            }
+            
+            updateEmptyPlaceholders();
+            showSuccessPanel(true);
+        }
+
+        // Show Success Block Screen Panel View state routing
+        function showSuccessPanel(pushStateFlag) {
+            document.getElementById('formCapturePanel').style.display = 'none';
+            document.getElementById('complaintsTablePanel').style.display = 'none';
+            document.getElementById('successResponsePanel').style.display = 'block';
+            
+            if (pushStateFlag) {
+                window.history.pushState({ panel: 'success' }, '', '');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // View Form Panels Trigger (Home State)
+        function showFormPanel(pushStateFlag) {
+            document.getElementById('successResponsePanel').style.display = 'none';
+            document.getElementById('complaintsTablePanel').style.display = 'none';
+            document.getElementById('formCapturePanel').style.display = 'block';
+            
+            if (pushStateFlag) {
+                window.history.pushState({ panel: 'form' }, '', '');
+            }
+            switchFormTab('complaint');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // View Complaints & Feedback Tracking Grid Panel Trigger
+        function showComplaintsTable(pushStateFlag) {
+            document.getElementById('formCapturePanel').style.display = 'none';
+            document.getElementById('successResponsePanel').style.display = 'none';
+            document.getElementById('complaintsTablePanel').style.display = 'block';
+            
+            if (pushStateFlag) {
+                window.history.pushState({ panel: 'table' }, '', '');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Open Modal and Fill Data Dynamically for Complaints
+        function viewComplaintDetails(category, date, status, desc) {
+            document.getElementById('modalMainTitle').innerHTML = '<i class="fas fa-file-alt me-2"></i> Complaint Details';
+            document.getElementById('modalCategoryWrapper').style.display = 'block';
+            document.getElementById('modalContentLabel').innerText = 'Complaint Statement:';
+            
+            document.getElementById('modalCategory').innerText = category;
+            document.getElementById('modalDate').innerText = date;
+            document.getElementById('modalDescription').innerText = desc;
+            
+            const badge = document.getElementById('modalStatusBadge');
+            badge.innerText = status;
+            
+            badge.className = "badge px-3 py-2 fs-6 fw-bold"; 
+            if(status === 'Resolved') {
+                badge.classList.add('bg-success', 'text-white');
+            } else if(status === 'Pending') {
+                badge.classList.add('bg-warning', 'text-dark');
+            } else {
+                badge.classList.add('bg-danger', 'text-white');
+            }
+            
+            const myModal = new bootstrap.Modal(document.getElementById('complaintViewModal'));
+            myModal.show();
+        }
+
+        // Open Modal and Fill Data Dynamically for Feedback
+        function viewFeedbackDetails(date, desc) {
+            document.getElementById('modalMainTitle').innerHTML = '<i class="fas fa-comment-alt me-2"></i> Feedback Details';
+            document.getElementById('modalCategoryWrapper').style.display = 'none';
+            document.getElementById('modalContentLabel').innerText = 'Feedback Given:';
+            
+            document.getElementById('modalDate').innerText = date;
+            document.getElementById('modalDescription').innerText = desc;
+            
+            const badge = document.getElementById('modalStatusBadge');
+            badge.innerText = "Submitted";
+            badge.className = "badge px-3 py-2 fs-6 fw-bold bg-success text-white";
+            
+            const myModal = new bootstrap.Modal(document.getElementById('complaintViewModal'));
+            myModal.show();
+        }
+    </script>
+    <footer class="text-center py-4 mt-5 small text-white" style="background-color: #0A2540; border-top: 3px solid #FFC107;">
+    <div class="container">
+        <p class="mb-1 fw-semibold">&copy; Government Graduate College for Women, Gujranwala.</p>
+        <p class="mb-0 text-white-50">Official Institutional Portal &bull; Secure Feedback & Complaint Desk</p>
+    </div>
+</footer>
+</body>
+</html>

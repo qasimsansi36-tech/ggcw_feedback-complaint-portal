@@ -1,0 +1,194 @@
+/* =======================================================
+   GGCW PORTAL CORE STYLING - SYSTEM ADMINISTRATION DESK
+========================================================== */
+
+body {
+    background-color: #ffffff !important;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* 1. BRIGHT BLUE NAVBAR OVERRIDE (MATCHES STUDENT/TEACHER) */
+.exact-blue-topbar {
+    background-color: #0d7ef2 !important;
+    background: #0d7ef2 !important;
+    width: 100% !important;
+    min-height: 50px !important;
+    margin: 0 !important;
+    padding: 8px 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-sizing: border-box;
+}
+
+/* 2. PILL BUTTONS WITH SOLID WHITE BORDERS & ACTIVE STATE */
+.exact-blue-topbar .exact-pill-btn {
+    color: #ffffff !important;
+    background-color: transparent !important;
+    border: 2px solid #ffffff !important;
+    border-radius: 50px !important;
+    padding: 6px 22px !important;
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    text-transform: capitalize;
+    white-space: nowrap;
+    text-decoration: none !important;
+    transition: all 0.2s ease-in-out !important;
+    display: inline-block;
+}
+
+.exact-blue-topbar .exact-pill-btn.active,
+.exact-blue-topbar .exact-pill-btn:hover {
+    background-color: #ffffff !important;
+    color: #0d7ef2 !important;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15) !important;
+}
+
+.exact-back-nav-btn {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 4px !important;
+    padding: 5px 14px !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+}
+
+/* 3. FIXED PATH BACKGROUND CONTAINER FORCE SIZE */
+.exact-hero-container {
+    position: relative;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    height: 180px !important;
+}
+
+.exact-hero-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block;
+}
+
+.exact-hero-overlay-text {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    background-color: rgba(0, 0, 0, 0.45);
+    padding: 8px 25px;
+    border-radius: 6px;
+    backdrop-filter: blur(2px);
+    color: #ffffff;
+    text-align: center;
+}
+
+.exact-hero-overlay-text h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.admin-filter-input {
+    font-size: 0.9rem;
+    border-radius: 6px;
+    border: 1px solid #cccccc;
+}
+
+.exact-submit-btn {
+    background-color: #0d7ef2 !important;
+    border-color: #0d7ef2 !important;
+    color: white !important;
+}
+
+.admin-counter-card {
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* =======================================================
+   EXACT FULL WIDTH MASTER TABLES SETUP OVERRIDES 
+========================================================== */
+
+.custom-admin-table-wrapper {
+    width: 100% !important;
+}
+
+/* Red Status Row Override */
+.exact-table tr.exact-status-red, 
+.exact-table tr.exact-status-red td,
+.exact-table tr.exact-status-red th,
+.exact-status-red { 
+    background-color: #ff0000 !important; 
+    background: #ff0000 !important;
+    color: #ffffff !important; 
+}
+
+/* Yellow Status Row Override */
+.exact-table tr.exact-status-yellow, 
+.exact-table tr.exact-status-yellow td,
+.exact-table tr.exact-status-yellow th,
+.exact-status-yellow { 
+    background-color: #ffff00 !important; 
+    background: #ffff00 !important;
+    color: #000000 !important; 
+}
+
+/* Green Status Row Override */
+.exact-table tr.exact-status-green, 
+.exact-table tr.exact-status-green td,
+.exact-table tr.exact-status-green th,
+.exact-status-green { 
+    background-color: #008000 !important; 
+    background: #008000 !important;
+    color: #ffffff !important; 
+}
+
+tr.exact-status-red td, tr.exact-status-green td {
+    color: #ffffff !important;
+}
+
+tr.exact-status-yellow td {
+    color: #000000 !important;
+}
+
+/* Black Header Rules for Table Grid */
+.exact-table th {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    text-align: center;
+    border: 1px solid #444444 !important;
+    font-weight: 600;
+    padding: 14px 6px;
+}
+
+.exact-table td {
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #ffffff !important; /* Uniform split grid lines setup */
+    padding: 12px 8px;
+}
+
+.btn-action-trigger {
+    border-radius: 4px !important;
+    padding: 4px 10px !important;
+    border: 1px solid #cccccc !important;
+    background-color: #ffffff !important;
+    transition: transform 0.1s ease;
+}
+
+.btn-action-trigger:hover {
+    transform: scale(1.08);
+}

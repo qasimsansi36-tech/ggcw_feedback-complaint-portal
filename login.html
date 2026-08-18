@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GGCW Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="container-fluid p-0 overflow-hidden">
+    <div id="auth-section" class="row g-0 vh-100">
+        <div class="col-md-6 left-side d-flex flex-column align-items-center justify-content-center p-5">
+            <img src="assets/img/logo1.png" alt="Logo" class="img-fluid w-75 bg-white p-2 shadow mb-4">
+            <div class="quote-box p-4 text-white">
+                <h6 class="text-warning fw-bold">Quote</h6>
+                <p class="mb-0 small">"Education is the key to unlocking a sustainable future."</p>
+                <small class="opacity-50">~ GGCW Management</small>
+            </div>
+        </div>
+        <div class="col-md-6 right-side d-flex flex-column align-items-center justify-content-center p-5 text-center text-white">
+            <div id="role-selection">
+                <h1 class="fw-bold mb-5 display-6 tracking-widest">WELCOME TO THE PORTAL</h1>
+                <div class="d-grid gap-3 w-75 mx-auto">
+                    <button class="btn btn-yellow py-3 fw-bold" onclick="showLogin('student')">Student Login</button>
+                    <button class="btn btn-yellow py-3 fw-bold" onclick="showLogin('teacher')">Admin Login</button>
+                </div>
+            </div>
+            <div id="login-form" style="display: none;" class="w-75">
+                <h2 class="fw-bold mb-4" id="login-title">LOGIN</h2>
+                <input type="text" class="form-control bg-dark border-secondary text-white p-3 mb-3" placeholder="ID / Username">
+                <input type="password" class="form-control bg-dark border-secondary text-white p-3 mb-4" placeholder="Password">
+                <button class="btn btn-yellow w-100 py-3 fw-bold" onclick="doLogin()">LOGIN</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="teacher-section" class="vh-100 overflow-auto bg-white" style="display: none;">
+        <div class="admin-top-bar text-center py-2 fw-bold text-white">
+            UNITED COLLEGE ENGINEERING AND RESEARCH
+        </div>
+        
+        <div class="container mt-3">
+            <div class="row align-items-start mb-3">
+                <div class="col-md-8">
+                    <div class="color-decoding-box p-3 border rounded shadow-sm small bg-light">
+                        <p class="fw-bold mb-1">Color decoding:</p>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span><span class="box bg-success"></span> Satisfied Complaints: <b>Green</b></span>
+                            <span><span class="box bg-danger"></span> Unresolved (No Action): <b>Red</b></span>
+                            <span><span class="box bg-warning"></span> Unresolved (1-3 Actions): <b>Yellow</b></span>
+                            <span><span class="box bg-orange"></span> Unresolved (>3 Actions): <b>Orange</b></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-warning btn-sm fw-bold">More than 2 action</button>
+                    <button class="btn btn-success btn-sm fw-bold">Send Email to All</button>
+                    <button class="btn btn-primary btn-sm fw-bold" onclick="location.reload()">Log out</button>
+                </div>
+            </div>
+
+            <h4 class="text-center fw-bold my-4">Total Complaints: 85</h4>
+
+            <div class="row g-2 mb-3 small align-items-end">
+                <div class="col">Search: <input type="date" class="form-control form-control-sm"></div>
+                <div class="col">Category: <select class="form-select form-select-sm"><option>All</option></select></div>
+                <div class="col">Complain: <select class="form-select form-select-sm"><option>All</option></select></div>
+                <div class="col">Semester: <select class="form-select form-select-sm"><option>All</option></select></div>
+                <div class="col">Branch: <select class="form-select form-select-sm"><option>All</option></select></div>
+                <div class="col-auto"><button class="btn btn-primary btn-sm px-4">All</button></div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered text-center align-middle small">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Date</th><th>Student ID</th><th>Name</th><th>Category</th><th>Branch</th><th>Semester</th><th>Complaint</th><th>Action Taken</th><th>Feedback</th><th>Satisfied</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-red-row text-white fw-bold">
+                            <td>13/9/2024, 8:06:00 pm</td><td>21220242</td><td>Ayush Rai</td><td>Financial</td><td>CSE</td><td>3</td>
+                            <td><button class="btn btn-light btn-sm py-0">Show Complaint</button></td>
+                            <td>No Action Taken</td><td></td><td></td>
+                        </tr>
+                        <tr class="bg-red-row text-white fw-bold">
+                            <td>25/6/2024, 6:34:10 pm</td><td>21220242</td><td>Ayush Rai</td><td>Academic</td><td>CSE</td><td>3</td>
+                            <td><button class="btn btn-light btn-sm py-0">Show Complaint</button></td>
+                            <td>No Action Taken</td><td></td><td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard-section" class="vh-100 flex-column overflow-auto" style="display: none;">
+        <div class="dashboard-navbar d-flex justify-content-between align-items-center px-4 py-2 text-white sticky-top">
+            <div class="fw-bold">UNITED <span class="text-warning ms-3">Hello, SAMIA MUSTAFA</span></div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-light btn-sm rounded-pill px-3">Complaint & feedback</button>
+                <button class="btn btn-outline-light btn-sm rounded-pill px-3">See Your Complaints</button>
+            </div>
+        </div>
+        <div class="container text-center mt-5">
+            <img src="assets/img/hall.png" class="img-fluid w-100 rounded shadow">
+        </div>
+    </div>
+</div>
+
+<script>
+    let role = '';
+    function showLogin(r) { 
+        role = r;
+        document.getElementById('role-selection').style.display = 'none'; 
+        document.getElementById('login-form').style.display = 'block'; 
+        document.getElementById('login-title').innerText = r.toUpperCase() + " LOGIN";
+    }
+    function doLogin() { 
+        document.getElementById('auth-section').style.setProperty('display', 'none', 'important');
+        if(role === 'teacher') {
+            document.getElementById('teacher-section').style.display = 'block';
+        } else {
+            document.getElementById('dashboard-section').style.setProperty('display', 'flex', 'important');
+        }
+    }
+</script>
+</body>
+</html>

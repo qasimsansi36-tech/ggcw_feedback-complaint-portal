@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GGCW Portal - Admin Desk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/admin-dashboard.css">
+</head>
+<body>
+
+    <div class="exact-blue-topbar">
+        <a href="index.html" onclick="if(window.history.length > 1) { window.history.back(); return false; }" class="exact-back-nav-btn">
+            <i class="fas fa-arrow-left me-1"></i> <i class="fas fa-user-shield"></i> Administration Desk
+        </a>
+        <div class="d-flex gap-2">
+            <button class="exact-pill-btn" onclick="switchTab('complaints')">Complaints Panel</button>
+            <button class="exact-pill-btn active" onclick="switchTab('users')">Verify & Manage Users</button>
+            <a href="index.html" class="exact-pill-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <div class="exact-hero-container">
+        <img src="/assets/img/bg.png" class="exact-hero-image" alt="College Stage Background">
+        <div class="exact-hero-overlay-text">
+            <h2>System Administration</h2>
+            <small>Control & Monitor Gateway</small>
+        </div>
+    </div>
+
+    <div class="container-fluid px-4 my-4">
+        <h2 class="text-center fw-bold mb-4">Welcome To Admin <span class="text-primary">Dashboard</span></h2>
+
+        <div id="complaints-panel-section" style="display: none;">
+            <div class="row g-3 mb-4 text-center">
+                <div class="col-md-3">
+                    <div class="p-3 bg-light border rounded shadow-sm admin-counter-card">
+                        <h6 class="text-muted text-uppercase fw-bold small">Total Complaints</h6>
+                        <h3 class="fw-bold text-dark" id="count-total">3</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3 border rounded shadow-sm exact-status-yellow admin-counter-card">
+                        <h6 class="text-uppercase fw-bold small">Pending Approval</h6>
+                        <h3 class="fw-bold" id="count-pending">1</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3 border rounded shadow-sm exact-status-green admin-counter-card">
+                        <h6 class="text-uppercase fw-bold small">Resolved Cases</h6>
+                        <h3 class="fw-bold" id="count-resolved">1</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3 border rounded shadow-sm exact-status-red admin-counter-card">
+                        <h6 class="text-uppercase fw-bold small">Unresolved/Alerts</h6>
+                        <h3 class="fw-bold" id="count-unresolved">1</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div id="filters-section" class="card p-3 mb-4 bg-light shadow-sm border-0">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-secondary">Filter by Department</label>
+                        <select id="dept-filter" class="form-select admin-filter-input">
+                            <option value="">All Departments</option>
+                            <option value="IT">IT Department</option>
+                            <option value="BBA">BBA Department</option>
+                            <option value="English">English Department</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-secondary">Filter by Status</label>
+                        <select id="status-filter" class="form-select admin-filter-input">
+                            <option value="">All Statuses</option>
+                            <option value="Unresolved">Unresolved</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Resolved">Resolved</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold small text-secondary">Search Student / Roll No</label>
+                        <input type="text" id="search-input" class="form-control admin-filter-input" placeholder="e.g. 2122-BSIT-045">
+                    </div>
+                    <div class="col-md-2 d-grid align-self-end">
+                        <button id="apply-filters-btn" class="btn btn-primary fw-bold exact-submit-btn"><i class="fas fa-search"></i> Apply</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive shadow-sm rounded mb-5 custom-admin-table-wrapper">
+                <table id="complaints-table" class="table exact-table w-100 m-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">ID</th>
+                            <th style="width: 15%;">Student Roll No</th>
+                            <th style="width: 10%;">Department</th>
+                            <th style="width: 15%;">Complaint Category</th>
+                            <th style="width: 15%;">Date & Time</th>
+                            <th style="width: 12%;">Status</th>
+                            <th style="width: 18%;">Admin Remarks</th>
+                            <th style="width: 10%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body">
+                        <tr class="exact-status-red" data-dept="IT" data-status="Unresolved" data-roll="2122-BSIT-045">
+                            <td>#01</td>
+                            <td>2122-BSIT-045</td>
+                            <td>IT</td>
+                            <td>Academic Issues</td>
+                            <td>25/6/2026, 6:34:10 pm</td>
+                            <td class="status-cell fw-bold">Unresolved</td>
+                            <td class="remarks-cell">Awaiting HOD signature.</td>
+                            <td>
+                                <div class="d-flex gap-1 justify-content-center">
+                                    <button class="btn btn-light btn-action-trigger" onclick="updateStatusAction(this, '#01')"><i class="fas fa-edit text-dark"></i></button>
+                                    <button class="btn btn-light btn-action-trigger" onclick="viewFeedbackAction('#01', 'No action taken yet. Student requires urgent response.')"><i class="fas fa-comment-dots text-dark"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="users-panel-section">
+            <h4 class="fw-bold mb-3 text-secondary"><i class="fas fa-user-check text-primary"></i> Pending Registrations (Verification Queue)</h4>
+            
+            <div class="table-responsive shadow-sm rounded mb-4 custom-admin-table-wrapper">
+                <table class="table exact-table w-100 m-0">
+                    <thead>
+                        <tr>
+                            <th>User Type</th>
+                            <th>Full Name</th>
+                            <th>Roll No / Email</th>
+                            <th>Department</th>
+                            <th>Verification Document Provided</th>
+                            <th>Status</th>
+                            <th>Verification Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="verification-table-body">
+                        </tbody>
+                </table>
+            </div>
+
+            <h4 class="fw-bold mb-3 mt-5 text-secondary"><i class="fas fa-users text-success"></i> Active Verified Accounts Database</h4>
+            <div class="table-responsive shadow-sm rounded mb-5 custom-admin-table-wrapper">
+                <table class="table exact-table w-100 m-0">
+                    <thead>
+                        <tr>
+                            <th>User Type</th>
+                            <th>Full Name</th>
+                            <th>Unique Identifier</th>
+                            <th>Department</th>
+                            <th>System Status</th>
+                            <th>Account Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody id="active-users-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="adminActionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded shadow border-0">
+                <div class="modal-header bg-dark text-white py-2">
+                    <h6 class="modal-title fw-bold" id="modalHeadingTitle">Update Action Box</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="target-row-id">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-dark">Change Complaint Status</label>
+                        <select id="modal-status-select" class="form-select">
+                            <option value="Unresolved">Unresolved (Red)</option>
+                            <option value="Pending">Pending (Yellow)</option>
+                            <option value="Resolved">Resolved (Green)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-dark">Admin Execution Remarks</label>
+                        <textarea id="modal-remarks-area" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-dark btn-sm px-3" onclick="saveAdminChanges()">Save Structural Logs</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="documentPreviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-dark text-white py-2">
+                    <h6 class="modal-title fw-bold"><i class="fas fa-id-card me-2 text-warning"></i>Verification Document Scan</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center bg-light">
+                    <img id="previewing-doc-frame" src="" class="img-fluid rounded border shadow-sm" alt="Document Asset Preview" style="max-height: 450px; width: 100%; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const BACKEND_BASE_URL = 'http://127.0.0.1:8000';
+        let currentEditingRow = null;
+
+        // On System Initialization Load active queue
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchSystemUsersPipeline();
+        });
+
+        // Navigation Switch Panels
+        function switchTab(tabName) {
+            const compSection = document.getElementById('complaints-panel-section');
+            const userSection = document.getElementById('users-panel-section');
+            const buttons = document.querySelectorAll('.exact-blue-topbar .exact-pill-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            if(tabName === 'complaints') {
+                compSection.style.display = 'block';
+                userSection.style.display = 'none';
+                window.event.target.classList.add('active');
+            } else {
+                compSection.style.display = 'none';
+                userSection.style.display = 'block';
+                window.event.target.classList.add('active');
+            }
+        }
+
+        // FETCH RAW ACCOUNTS VIA STORAGE DESK API
+        function fetchSystemUsersPipeline() {
+            fetch(`${BACKEND_BASE_URL}/api/admin/users`, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(usersList => {
+                const pendingBody = document.getElementById('verification-table-body');
+                const activeBody = document.getElementById('active-users-body');
+                
+                pendingBody.innerHTML = '';
+                activeBody.innerHTML = '';
+
+                usersList.forEach(user => {
+                    let deptValue = user.department ? user.department : (user.roll && user.roll.includes('BSIT') ? 'IT' : 'N/A');
+                    let identifier = user.roll ? user.roll : user.email;
+
+                    if (user.is_approved == 0) {
+                        let rowHtml = `
+                            <tr class="exact-status-yellow">
+                                <td><strong>${user.role ? user.role.toUpperCase() : 'STUDENT'}</strong></td>
+                                <td>${user.name}</td>
+                                <td>${identifier}</td>
+                                <td>${deptValue}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-dark px-2 py-1" onclick="launchDocumentView('${user.card_image}')">
+                                        <i class="fas fa-id-card"></i> View Verification Card
+                                    </button>
+                                </td>
+                                <td class="fw-bold text-warning">Pending Verification</td>
+                                <td>
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        <button class="btn btn-success btn-sm fw-bold px-3 py-1" onclick="processApprovalLock(${user.id}, 'approve')"><i class="fas fa-check"></i> Verify & Approve</button>
+                                        <button class="btn btn-danger btn-sm fw-bold px-2 py-1" onclick="processApprovalLock(${user.id}, 'reject')"><i class="fas fa-trash"></i> Reject</button>
+                                    </div>
+                                </td>
+                            </tr>`;
+                        pendingBody.insertAdjacentHTML('beforeend', rowHtml);
+                    } else {
+                        let rowHtml = `
+                            <tr class="exact-status-green">
+                                <td>${user.role ? user.role.toUpperCase() : 'STUDENT'}</td>
+                                <td>${user.name}</td>
+                                <td>${identifier}</td>
+                                <td>${deptValue}</td>
+                                <td class="fw-bold text-success">Verified & Active</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm fw-bold px-3" onclick="processApprovalLock(${user.id}, 'reject')"><i class="fas fa-user-slash"></i> Terminate Account</button>
+                                </td>
+                            </tr>`;
+                        activeBody.insertAdjacentHTML('beforeend', rowHtml);
+                    }
+                });
+            })
+            .catch(err => {
+                console.error("Transmission Drop:", err);
+            });
+        }
+
+        // TRIGGER PIPELINE FOR ID CARD DISPLAY WINDOW (FIXED FOR DIRECT PUBLIC PATH ACCESSIBILITY)
+        function launchDocumentView(imageRelativePath) {
+            if(!imageRelativePath || imageRelativePath === 'null' || imageRelativePath === 'undefined') { 
+                alert("No structural image asset uploaded by student."); 
+                return; 
+            }
+            
+            // MAP DIRECTLY TO LARAVEL PUBLIC STUDENT CARDS ROOT FOLDER
+            let targetAssetUrl = imageRelativePath.startsWith('http') ? imageRelativePath : `${BACKEND_BASE_URL}/${imageRelativePath}`;
+            
+            console.log("Loading Image Url Pipeline:", targetAssetUrl);
+            
+            const docFrame = document.getElementById('previewing-doc-frame');
+            docFrame.src = targetAssetUrl;
+            
+            let previewModal = new bootstrap.Modal(document.getElementById('documentPreviewModal'));
+            previewModal.show();
+        }
+
+        // TRANSMIT EXECUTION COMMAND TO LARAVEL CONTROLLER
+        function processApprovalLock(userId, actionIntent) {
+            let userConfirmation = actionIntent === 'approve' ? 
+                confirm("Verify and authorize account entrance into college network workspace?") : 
+                confirm("Are you sure you want to completely reject/remove this user transmission data?");
+            
+            if(!userConfirmation) return;
+
+            fetch(`${BACKEND_BASE_URL}/api/admin/users/${userId}/status`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ action: actionIntent })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    alert(actionIntent === 'approve' ? "Account Approved! Verification status broadcasted." : "Record purged successfully from cloud desk storage.");
+                    fetchSystemUsersPipeline(); 
+                } else {
+                    alert("Operation Denied: " + (data.error || "Execution dropped by backend controller."));
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Database Sync Failed!");
+            });
+        }
+
+        // Functional action layer triggers to edit status and text remarks
+        function updateStatusAction(buttonElement, complaintId) {
+            currentEditingRow = buttonElement.closest('tr');
+            document.getElementById('target-row-id').value = complaintId;
+            document.getElementById('modalHeadingTitle').innerText = "Modify Tracking Parameters for " + complaintId;
+            
+            let currentStatus = currentEditingRow.getAttribute('data-status');
+            let currentRemarks = currentEditingRow.querySelector('.remarks-cell').innerText;
+            document.getElementById('modal-status-select').value = currentStatus;
+            document.getElementById('modal-remarks-area').value = currentRemarks;
+            
+            let myModal = new bootstrap.Modal(document.getElementById('adminActionModal'));
+            myModal.show();
+        }
+
+        function saveAdminChanges() {
+            if(!currentEditingRow) return;
+            let selectedStatus = document.getElementById('modal-status-select').value;
+            let enteredRemarks = document.getElementById('modal-remarks-area').value;
+            
+            currentEditingRow.classList.remove('exact-status-red', 'exact-status-yellow', 'exact-status-green');
+            
+            if(selectedStatus === 'Unresolved') { currentEditingRow.classList.add('exact-status-red'); }
+            else if(selectedStatus === 'Pending') { currentEditingRow.classList.add('exact-status-yellow'); }
+            else if(selectedStatus === 'Resolved') { currentEditingRow.classList.add('exact-status-green'); }
+            
+            currentEditingRow.setAttribute('data-status', selectedStatus);
+            currentEditingRow.querySelector('.status-cell').innerText = selectedStatus;
+            currentEditingRow.querySelector('.remarks-cell').innerText = enteredRemarks;
+            
+            bootstrap.Modal.getInstance(document.getElementById('adminActionModal')).hide();
+        }
+
+        function viewFeedbackAction(id, textMessage) {
+            alert("Complaint Log ID " + id + " Student Feedback Message Content:\n\n\"" + textMessage + "\"");
+        }
+
+        // Filters Engine Matching
+        document.getElementById('apply-filters-btn').addEventListener('click', function() {
+            let deptVal = document.getElementById('dept-filter').value.toLowerCase();
+            let statusVal = document.getElementById('status-filter').value.toLowerCase();
+            let searchVal = document.getElementById('search-input').value.toLowerCase();
+            
+            document.querySelectorAll('#admin-table-body tr').forEach(row => {
+                let matchesDept = (deptVal === "" || row.getAttribute('data-dept').toLowerCase() === deptVal);
+                let matchesStatus = (statusVal === "" || row.getAttribute('data-status').toLowerCase() === statusVal);
+                let matchesSearch = (searchVal === "" || row.getAttribute('data-roll').toLowerCase().includes(searchVal));
+                row.style.display = (matchesDept && matchesStatus && matchesSearch) ? "" : "none";
+            });
+        });
+    </script>
+</body>
+</html>
