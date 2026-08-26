@@ -6,7 +6,7 @@
     <title>GGCW Portal - Institutional Gateway</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/assets/css/index.css">
+    <link rel="stylesheet" href="./assets/css/index.css">
 </head>
 <body>
 
@@ -61,6 +61,7 @@
             </div>
         </div>
 
+        <!-- Student Login Section -->
         <div id="studentLoginSection" class="w-100 view-panel">
             <div class="card form-container-desk mx-auto shadow-lg text-start border-0 p-4">
                 <button class="btn btn-link back-link-btn ps-0 mb-3 text-decoration-none fw-bold" onclick="togglePortalView('homeCardsSection')">
@@ -73,13 +74,14 @@
                 <form onsubmit="validateStudentLogin(event)">
                     <div class="mb-3"><label class="form-label small fw-bold">Email Address</label><input type="email" id="studentLogEmail" class="form-control" placeholder="Enter student email" required></div>
                     <div class="mb-2"><label class="form-label small fw-bold">Password</label><input type="password" id="studentLogPassword" class="form-control" placeholder="Enter password" required></div>
-                    <div class="mb-3 text-end"><a href="#" class="text-secondary small text-decoration-none" onclick="alert('Password reset link triggered. Contact department admin.')"><i class="fas fa-key me-1"></i>Forgot Password?</a></div>
+                    <div class="mb-3 text-end"><a href="#" class="text-secondary small text-decoration-none" onclick="togglePortalView('forgotPasswordSection')"><i class="fas fa-key me-1"></i>Forgot Password?</a></div>
                     <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-2 py-2.5 shadow">Login</button>
                     <div class="text-center mt-3 small">Don't have an account? <a href="#" class="text-success fw-bold text-decoration-none" onclick="togglePortalView('studentSignUpSection')">Sign-up</a></div>
                 </form>
             </div>
         </div>
 
+        <!-- Student Sign Up Section -->
         <div id="studentSignUpSection" class="w-100 view-panel">
             <div class="card form-container-desk mx-auto shadow-lg text-start border-0 p-4">
                 <button class="btn btn-link back-link-btn ps-0 mb-3 text-decoration-none fw-bold" onclick="togglePortalView('homeCardsSection')">
@@ -102,7 +104,7 @@
                             </select>
                         </div>
                         <div class="col-sm-6"><label class="form-label small fw-bold">Email Address</label><input type="email" id="studEmail" class="form-control" placeholder="name@college.edu" required></div>
-                        <div class="col-sm-6"><label class="form-label small fw-bold">Create Password</label><input type="password" id="studPassword" class="form-control" placeholder="Choose password" required></div>
+                        <div class="col-sm-6"><label class="form-label small fw-bold">Create Password</label><input type="password" id="studPassword" class="form-control" placeholder="At least 8 characters" required></div>
                         <div class="col-100"><label class="form-label small fw-bold">Upload College ID Card Photo <span class="text-danger">*</span></label><input type="file" id="studCardImg" class="form-control" accept="image/*" required></div>
                     </div>
                     <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-4 py-2.5 shadow"><i class="fas fa-database me-1"></i> Register</button>
@@ -110,6 +112,7 @@
             </div>
         </div>
 
+        <!-- Teacher Login Section -->
         <div id="teacherLoginSection" class="w-100 view-panel">
             <div class="card form-container-desk mx-auto shadow-lg text-start border-0 p-4">
                 <button class="btn btn-link back-link-btn ps-0 mb-3 text-decoration-none fw-bold" onclick="togglePortalView('homeCardsSection')">
@@ -122,13 +125,14 @@
                 <form onsubmit="validateTeacherLogin(event)">
                     <div class="mb-3"><label class="form-label small fw-bold">Official Email ID</label><input type="email" id="teacherLogEmail" class="form-control" placeholder="faculty@ggcw.edu.pk" required></div>
                     <div class="mb-2"><label class="form-label small fw-bold">Password</label><input type="password" id="teacherLogPassword" class="form-control" placeholder="Enter password" required></div>
-                    <div class="mb-3 text-end"><a href="#" class="text-secondary small text-decoration-none" onclick="alert('Password reset link triggered. Contact department admin.')"><i class="fas fa-key me-1"></i>Forgot Password?</a></div>
+                    <div class="mb-3 text-end"><a href="#" class="text-secondary small text-decoration-none" onclick="togglePortalView('forgotPasswordSection')"><i class="fas fa-key me-1"></i>Forgot Password?</a></div>
                     <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-2 py-2.5 shadow">Login</button>
                     <div class="text-center mt-3 small">Don't have an account? <a href="#" class="text-success fw-bold text-decoration-none" onclick="togglePortalView('teacherSignUpSection')">Sign-up</a></div>
                 </form>
             </div>
         </div>
 
+        <!-- Teacher Sign Up Section -->
         <div id="teacherSignUpSection" class="w-100 view-panel">
             <div class="card form-container-desk mx-auto shadow-lg text-start border-0 p-4">
                 <button class="btn btn-link back-link-btn ps-0 mb-3 text-decoration-none fw-bold" onclick="togglePortalView('homeCardsSection')">
@@ -149,7 +153,7 @@
                             </select>
                         </div>
                         <div class="col-sm-6"><label class="form-label small fw-bold">Official Email ID</label><input type="email" id="teachEmail" class="form-control" placeholder="faculty@ggcw.edu.pk" required></div>
-                        <div class="col-sm-6"><label class="form-label small fw-bold">Create Password</label><input type="password" id="teachPassword" class="form-control" placeholder="Choose security password" required></div>
+                        <div class="col-sm-6"><label class="form-label small fw-bold">Create Password</label><input type="password" id="teachPassword" class="form-control" placeholder="At least 8 characters" required></div>
                         <div class="col-100"><label class="form-label small fw-bold">Upload Your Original ID Card Photo <span class="text-danger">*</span></label><input type="file" id="teachCardImg" class="form-control" accept="image/*" required></div>
                     </div>
                     <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-4 py-2.5 shadow"><i class="fas fa-database me-1"></i> Register</button>
@@ -157,6 +161,7 @@
             </div>
         </div>
 
+        <!-- Admin Login Section -->
         <div id="adminLoginSection" class="w-100 view-panel">
             <div class="card form-container-desk mx-auto shadow-lg text-start border-0 p-4 admin-border-top">
                 <button class="btn btn-link back-link-btn text-danger ps-0 mb-3 text-decoration-none fw-bold" onclick="togglePortalView('homeCardsSection')">
@@ -174,11 +179,39 @@
             </div>
         </div>
 
+        <!-- Reset Password View -->
+        <div id="forgotPasswordSection" class="w-100 view-panel">
+            <div class="card form-container-desk mx-auto shadow-lg text-start border-0 p-4">
+                <button class="btn btn-link back-link-btn ps-0 mb-3 text-decoration-none fw-bold" onclick="togglePortalView('homeCardsSection')">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Main View
+                </button>
+                <div class="text-center mb-4">
+                    <i class="fas fa-unlock-alt fa-2x text-warning mb-2"></i>
+                    <h3 class="fw-bold text-dark m-0">Reset Password</h3>
+                    <p class="text-muted small m-0">Enter registered email to set a new password</p>
+                </div>
+                <form onsubmit="handleResetPassword(event)">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Registered Email</label>
+                        <input type="email" id="resetEmail" class="form-control" placeholder="Enter email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">New Password</label>
+                        <input type="password" id="resetNewPassword" class="form-control" placeholder="Enter new password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Confirm New Password</label>
+                        <input type="password" id="resetConfirmPassword" class="form-control" placeholder="Re-type new password" required>
+                    </div>
+                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-2 py-2.5 shadow">Reset Password</button>
+                </form>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        const PRIMARY_URL = 'http://127.0.0.1:8000/api';
-        const FALLBACK_URL = 'http://localhost:8000/api';
+        const LARAVEL_API_URL = 'http://127.0.0.1:8000/api';
 
         function togglePortalView(targetId) {
             document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
@@ -189,92 +222,115 @@
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         
         function checkName(value, fieldName) {
-            if (!value.trim()) { alert(`${fieldName} cannot be empty!`); return false; }
-            if (!nameRegex.test(value)) { alert(`${fieldName} must contain alphabets only.`); return false; }
+            if (!value.trim()) { alert(`${fieldName} empty nahi ho sakta!`); return false; }
+            if (!nameRegex.test(value)) { alert(`${fieldName} me sirf alphabets ho sakte hain.`); return false; }
             return true;
         }
 
         function checkEmail(value) {
-            if (!emailRegex.test(value)) { alert("Enter a valid professional email structure!"); return false; }
+            if (!emailRegex.test(value)) { alert("Sahi email format enter karein!"); return false; }
             return true;
         }
 
-        function executeNetworkPayload(endpoint, method, bodyPayload, isFormData, successCallback) {
-            let options = { method: method, body: bodyPayload };
+        function checkPassword(password) {
+            if (password.length < 8) {
+                alert("Password kam se kam 8 characters ka hona chahiye!");
+                return false;
+            }
+            return true;
+        }
+
+        function executeLaravelRequest(endpoint, method, bodyPayload, isFormData, successCallback) {
+            let options = { 
+                method: method, 
+                headers: {
+                    'Accept': 'application/json'
+                },
+                body: bodyPayload 
+            };
+
             if (!isFormData) {
-                options.headers = { 'Content-Type': 'application/json' };
+                options.headers['Content-Type'] = 'application/json';
             }
 
-            fetch(`${PRIMARY_URL}${endpoint}`, options)
-            .then(res => res.json())
+            fetch(`${LARAVEL_API_URL}${endpoint}`, options)
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.message || data.error || 'Server request fail ho gaya.');
+                }
+                return data;
+            })
             .then(data => successCallback(data))
-            .catch(() => {
-                fetch(`${FALLBACK_URL}${endpoint}`, options)
-                .then(res => res.json())
-                .then(data => successCallback(data))
-                .catch(err => {
-                    console.error("Critical Network Error:", err);
-                    alert("Network Pipeline Error: Cannot connect to backend server.");
-                });
+            .catch(err => {
+                console.error("Laravel Network Error:", err);
+                alert("Error: " + err.message + "\n\n(Aap ka Laravel server `php artisan serve` par chalna zaroori hai)");
             });
         }
 
-        // 1. Student Sign Up
+        function handleResetPassword(event) {
+            event.preventDefault();
+            let email = document.getElementById('resetEmail').value;
+            let newPassword = document.getElementById('resetNewPassword').value;
+            let confirmPassword = document.getElementById('resetConfirmPassword').value;
+
+            if (!checkEmail(email) || !checkPassword(newPassword)) return;
+            if (newPassword !== confirmPassword) { alert("Passwords match nahi kar rahe!"); return; }
+
+            let payload = JSON.stringify({ email: email, password: newPassword });
+
+            executeLaravelRequest('/auth/reset-password', 'POST', payload, false, (data) => {
+                alert(data.message || "Password successfully reset ho gaya!");
+                togglePortalView('homeCardsSection');
+            });
+        }
+
         function validateStudentSignUp(event) {
             event.preventDefault();
             let name = document.getElementById('studName').value;
             let fatherName = document.getElementById('studFather').value;
-            let rollNo = document.getElementById('studRoll').value; // Ab digits save honge direct
-            let department = document.getElementById('studDept').value; // Dynamic Dropdown Value
+            let rollNo = document.getElementById('studRoll').value;
+            let department = document.getElementById('studDept').value;
             let email = document.getElementById('studEmail').value;
             let password = document.getElementById('studPassword').value;
             let fileInput = document.getElementById('studCardImg');
 
-            if (!checkName(name, "Student Name") || !checkName(fatherName, "Father Name") || !checkEmail(email)) return;
-            if (password.length < 8) { alert("Password must be at least 8 characters!"); return; }
-            if (fileInput.files.length === 0) { alert("ID card file is mandatory."); return; }
+            if (!checkName(name, "Student Name") || !checkName(fatherName, "Father Name") || !checkEmail(email) || !checkPassword(password)) return;
+            if (fileInput.files.length === 0) { alert("ID Card image upload karna zaroori hai."); return; }
 
             let formData = new FormData();
             formData.append('name', name);
             formData.append('father_name', fatherName);
-            formData.append('roll', rollNo); // Fixed key name for laravel matching
-            formData.append('department', department); // Appending dynamic selected department
+            formData.append('roll', rollNo);
+            formData.append('department', department);
             formData.append('email', email);
             formData.append('password', password);
             formData.append('role', 'student');
             formData.append('card_image', fileInput.files[0]);
 
-            executeNetworkPayload('/auth/register', 'POST', formData, true, (data) => {
-                if (data.success) {
-                    alert("Account submitted and saved permanently in database! Please wait for Admin Verification.");
-                    togglePortalView('studentLoginSection');
-                } else {
-                    alert("Registration Refused: " + (data.error || "Check backend database fields."));
-                }
+            executeLaravelRequest('/auth/register', 'POST', formData, true, (data) => {
+                alert(data.message || "Registration successful! Admin approval ka wait karein.");
+                togglePortalView('studentLoginSection');
             });
         }
 
-        // 2. Student Login (Redirect Lock Fixed)
         function validateStudentLogin(event) {
             event.preventDefault();
             let email = document.getElementById('studentLogEmail').value;
             let password = document.getElementById('studentLogPassword').value;
-            if (!checkEmail(email)) return;
+
+            if (!checkEmail(email) || !checkPassword(password)) return;
 
             let payload = JSON.stringify({ email: email, password: password, role: 'student' });
-            executeNetworkPayload('/auth/login', 'POST', payload, false, (data) => {
-                if (data.success) {
-                    alert("Verification complete! Redirecting to Student Dashboard Workspace...");
-                    localStorage.setItem('user_role', data.role);
-                    localStorage.setItem('user_details', JSON.stringify(data.user));
-                    window.location.href = '/student-dashboard.html'; // Dynamic Redirection
-                } else {
-                    alert(data.error || "Credentials unmatched.");
-                }
+            executeLaravelRequest('/auth/login', 'POST', payload, false, (data) => {
+                alert("Login Successful! Redirecting...");
+                localStorage.setItem('user_token', data.token || data.access_token || '');
+                localStorage.setItem('user_role', data.role);
+                localStorage.setItem('user_details', JSON.stringify(data.user));
+                window.location.href = './student/student-dashboard.html';
             });
         }
 
-        // 3. Teacher Sign Up
         function validateTeacherSignUp(event) {
             event.preventDefault();
             let name = document.getElementById('teachName').value;
@@ -283,65 +339,56 @@
             let password = document.getElementById('teachPassword').value;
             let fileInput = document.getElementById('teachCardImg');
 
-            if (!checkName(name, "Faculty Name") || !checkEmail(email)) return;
-            if (password.length < 8) { alert("Password must be at least 8 characters."); return; }
-            if (fileInput.files.length === 0) { alert("ID Image upload required."); return; }
+            if (!checkName(name, "Faculty Name") || !checkEmail(email) || !checkPassword(password)) return;
+            if (fileInput.files.length === 0) { alert("ID Card image upload karna zaroori hai."); return; }
 
             let formData = new FormData();
             formData.append('name', name);
-            formData.append('department', department); // Appending selected department
+            formData.append('department', department);
             formData.append('email', email);
             formData.append('password', password);
             formData.append('role', 'teacher');
             formData.append('card_image', fileInput.files[0]);
 
-            executeNetworkPayload('/auth/register', 'POST', formData, true, (data) => {
-                if (data.success) {
-                    alert("Faculty Account saved permanently! Please wait for Admin Verification.");
-                    togglePortalView('teacherLoginSection');
-                } else {
-                    alert("Error: " + (data.error || "Execution dropped."));
-                }
+            executeLaravelRequest('/auth/register', 'POST', formData, true, (data) => {
+                alert(data.message || "Teacher Account registered! Admin approval ka wait karein.");
+                togglePortalView('teacherLoginSection');
             });
         }
 
-        // 4. Teacher Login (Redirect Lock Fixed)
         function validateTeacherLogin(event) {
             event.preventDefault();
             let email = document.getElementById('teacherLogEmail').value;
             let password = document.getElementById('teacherLogPassword').value;
-            if (!checkEmail(email)) return;
+
+            if (!checkEmail(email) || !checkPassword(password)) return;
 
             let payload = JSON.stringify({ email: email, password: password, role: 'teacher' });
-            executeNetworkPayload('/auth/login', 'POST', payload, false, (data) => {
-                if (data.success) {
-                    alert("Verification complete! Redirecting to Faculty Dashboard Workspace...");
-                    localStorage.setItem('user_role', data.role);
-                    localStorage.setItem('user_details', JSON.stringify(data.user));
-                    window.location.href = '/teacher-dashboard.html'; // Dynamic Redirection
-                } else {
-                    alert(data.error || "Credentials unmatched.");
-                }
+            executeLaravelRequest('/auth/login', 'POST', payload, false, (data) => {
+                alert("Faculty Login Successful! Redirecting...");
+                localStorage.setItem('user_token', data.token || data.access_token || '');
+                localStorage.setItem('user_role', data.role);
+                localStorage.setItem('user_details', JSON.stringify(data.user));
+                window.location.href = './student/Teacher/teacher-dashboard.html';
             });
         }
 
-        // 5. Admin Login Validation
         function validateAdminLogin(event) {
             event.preventDefault();
             let email = document.getElementById('adminEmail').value;
             let password = document.getElementById('adminPassword').value;
-            if (!checkEmail(email)) return;
+
+            if (!checkEmail(email) || !checkPassword(password)) return;
 
             let payload = JSON.stringify({ email: email, password: password, role: 'admin' });
-            executeNetworkPayload('/auth/login', 'POST', payload, false, (data) => {
-                if (data.success) {
-                    alert("Verification complete! Redirecting to Admin Control Dashboard...");
-                    localStorage.setItem('user_role', data.role);
-                    localStorage.setItem('user_details', JSON.stringify(data.user));
-                    window.location.href = '/admin-dashboard.html';
-                } else {
-                    alert(data.error || "Invalid Admin Credentials.");
-                }
+            executeLaravelRequest('/auth/login', 'POST', payload, false, (data) => {
+                alert("Admin Access Granted!");
+                localStorage.setItem('user_token', data.token || data.access_token || '');
+                localStorage.setItem('user_role', data.role);
+                localStorage.setItem('user_details', JSON.stringify(data.user));
+                
+                // Correct relative path based on workspace folder structure
+                window.location.href = './admin/admin-dashboard.html';
             });
         }
     </script>
