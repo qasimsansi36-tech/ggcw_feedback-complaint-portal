@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Details - Admin Desk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin-dashboard.css">
+</head>
+<body class="bg-light">
+
+    <div class="exact-blue-topbar">
+        <a href="all-complaints.html" class="exact-back-nav-btn">
+            <i class="fas fa-arrow-left me-1"></i> Back to Complaints List
+        </a>
+        <h5 class="text-white m-0 fw-bold">Complaint Ticket Inspection</h5>
+        <div></div>
+    </div>
+
+    <div class="container my-5" style="max-width: 800px;">
+        <div class="card shadow border-0">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h5 class="m-0" id="ticket-id">Loading Ticket...</h5>
+                <span id="ticket-status-badge" class="badge bg-secondary">--</span>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <strong>Student Roll No:</strong> <span id="student-roll">--</span>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Department:</strong> <span id="student-dept">--</span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <strong>Category / Subject:</strong>
+                    <p id="complaint-subject" class="fw-bold text-primary mb-1">--</p>
+                </div>
+
+                <div class="mb-4">
+                    <strong>Full Description:</strong>
+                    <div id="complaint-description" class="p-3 bg-light rounded border mt-1">--</div>
+                </div>
+
+                <hr>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Update Case Status</label>
+                    <select id="update-status-select" class="form-select">
+                        <option value="Unresolved">Unresolved</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Resolved">Resolved</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Admin Executive Remarks</label>
+                    <textarea id="admin-remarks-text" class="form-control" rows="3" placeholder="Enter remarks for student..."></textarea>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button class="btn btn-success fw-bold px-4" onclick="submitStatusUpdate()"><i class="fas fa-save me-1"></i> Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BACKEND_BASE_URL = 'http://127.0.0.1:8000';
+        const urlParams = new URLSearchParams(window.location.search);
+        const complaintId = urlParams.get('id');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if(!complaintId) {
+                alert("No Complaint ID specified.");
+                window.location.href = 'all-complaints.html';
+                return;
+            }
+            fetchComplaintDetails();
+        });
+
+        function fetchComplaintDetails() {
+            const token = localStorage.getItem('user_token');
+            fetch(`${BACKEND_BASE_URL}/api/admin/complaints/${complaintId}`, {
+                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                let item = data.complaint || data;
+                document.getElementById('ticket-id').innerText = `Ticket #${item.id}`;
+                document.getElementById('student-roll').innerText = item.roll || item.student_roll || 'N/A';
+                document.getElementById('student-dept').innerText = item.department || 'N/A';
+                document.getElementById('complaint-subject').innerText = item.category || item.subject || 'General';
+                document.getElementById('complaint-description').innerText = item.description || item.details || 'No description provided.';
+                
+                document.getElementById('update-status-select').value = item.status || 'Unresolved';
+                document.getElementById('admin-remarks-text').value = item.admin_remarks || '';
+
+                let badge = document.getElementById('ticket-status-badge');
+                badge.innerText = item.status || 'Unresolved';
+                badge.className = `badge ${item.status === 'Resolved' ? 'bg-success' : (item.status === 'Pending' ? 'bg-warning text-dark' : 'bg-danger')}`;
+            })
+            .catch(err => console.error(err));
+        }
+
+        function submitStatusUpdate() {
+            const token = localStorage.getItem('user_token');
+            const status = document.getElementById('update-status-select').value;
+            const remarks = document.getElementById('admin-remarks-text').value;
+
+            fetch(`${BACKEND_BASE_URL}/api/admin/complaints/${complaintId}/status`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ status: status, admin_remarks: remarks })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert("Complaint status successfully updated!");
+                fetchComplaintDetails();
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Failed to update status.");
+            });
+        }
+    </script>
+</body>
+</html>

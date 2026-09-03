@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./assets/css/index.css">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
     <nav class="navbar navbar-expand-lg institutional-navbar shadow-sm w-100">
         <div class="container-fluid px-4">
@@ -75,7 +75,7 @@
                     <div class="mb-3"><label class="form-label small fw-bold">Email Address</label><input type="email" id="studentLogEmail" class="form-control" placeholder="Enter student email" required></div>
                     <div class="mb-2"><label class="form-label small fw-bold">Password</label><input type="password" id="studentLogPassword" class="form-control" placeholder="Enter password" required></div>
                     <div class="mb-3 text-end"><a href="#" class="text-secondary small text-decoration-none" onclick="togglePortalView('forgotPasswordSection')"><i class="fas fa-key me-1"></i>Forgot Password?</a></div>
-                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-2 py-2.5 shadow">Login</button>
+                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-2 py-2 shadow">Login</button>
                     <div class="text-center mt-3 small">Don't have an account? <a href="#" class="text-success fw-bold text-decoration-none" onclick="togglePortalView('studentSignUpSection')">Sign-up</a></div>
                 </form>
             </div>
@@ -105,9 +105,9 @@
                         </div>
                         <div class="col-sm-6"><label class="form-label small fw-bold">Email Address</label><input type="email" id="studEmail" class="form-control" placeholder="name@college.edu" required></div>
                         <div class="col-sm-6"><label class="form-label small fw-bold">Create Password</label><input type="password" id="studPassword" class="form-control" placeholder="At least 8 characters" required></div>
-                        <div class="col-100"><label class="form-label small fw-bold">Upload College ID Card Photo <span class="text-danger">*</span></label><input type="file" id="studCardImg" class="form-control" accept="image/*" required></div>
+                        <div class="col-12"><label class="form-label small fw-bold">Upload College ID Card Photo <span class="text-danger">*</span></label><input type="file" id="studCardImg" class="form-control" accept="image/*" required></div>
                     </div>
-                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-4 py-2.5 shadow"><i class="fas fa-database me-1"></i> Register</button>
+                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-4 py-2 shadow"><i class="fas fa-database me-1"></i> Register</button>
                 </form>
             </div>
         </div>
@@ -126,7 +126,7 @@
                     <div class="mb-3"><label class="form-label small fw-bold">Official Email ID</label><input type="email" id="teacherLogEmail" class="form-control" placeholder="faculty@ggcw.edu.pk" required></div>
                     <div class="mb-2"><label class="form-label small fw-bold">Password</label><input type="password" id="teacherLogPassword" class="form-control" placeholder="Enter password" required></div>
                     <div class="mb-3 text-end"><a href="#" class="text-secondary small text-decoration-none" onclick="togglePortalView('forgotPasswordSection')"><i class="fas fa-key me-1"></i>Forgot Password?</a></div>
-                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-2 py-2.5 shadow">Login</button>
+                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-2 py-2 shadow">Login</button>
                     <div class="text-center mt-3 small">Don't have an account? <a href="#" class="text-success fw-bold text-decoration-none" onclick="togglePortalView('teacherSignUpSection')">Sign-up</a></div>
                 </form>
             </div>
@@ -154,9 +154,9 @@
                         </div>
                         <div class="col-sm-6"><label class="form-label small fw-bold">Official Email ID</label><input type="email" id="teachEmail" class="form-control" placeholder="faculty@ggcw.edu.pk" required></div>
                         <div class="col-sm-6"><label class="form-label small fw-bold">Create Password</label><input type="password" id="teachPassword" class="form-control" placeholder="At least 8 characters" required></div>
-                        <div class="col-100"><label class="form-label small fw-bold">Upload Your Original ID Card Photo <span class="text-danger">*</span></label><input type="file" id="teachCardImg" class="form-control" accept="image/*" required></div>
+                        <div class="col-12"><label class="form-label small fw-bold">Upload Your Original ID Card Photo <span class="text-danger">*</span></label><input type="file" id="teachCardImg" class="form-control" accept="image/*" required></div>
                     </div>
-                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-4 py-2.5 shadow"><i class="fas fa-database me-1"></i> Register</button>
+                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-4 py-2 shadow"><i class="fas fa-database me-1"></i> Register</button>
                 </form>
             </div>
         </div>
@@ -174,7 +174,7 @@
                 <form onsubmit="validateAdminLogin(event)">
                     <div class="mb-3"><label class="form-label small fw-bold text-dark">System Email ID</label><input type="email" id="adminEmail" class="form-control" placeholder="admin@ggcw.edu.pk" required></div>
                     <div class="mb-3"><label class="form-label small fw-bold text-dark">Master Password</label><input type="password" id="adminPassword" class="form-control" placeholder="Enter root password" required></div>
-                    <button type="submit" class="btn btn-danger w-100 fw-bold mt-2 py-2.5 shadow">Secure Login</button>
+                    <button type="submit" class="btn btn-danger w-100 fw-bold mt-2 py-2 shadow">Secure Login</button>
                 </form>
             </div>
         </div>
@@ -203,15 +203,22 @@
                         <label class="form-label small fw-bold">Confirm New Password</label>
                         <input type="password" id="resetConfirmPassword" class="form-control" placeholder="Re-type new password" required>
                     </div>
-                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-2 py-2.5 shadow">Reset Password</button>
+                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-2 py-2 shadow">Reset Password</button>
                 </form>
             </div>
         </div>
 
     </div>
 
+    <footer class="text-center py-4 mt-auto small text-white" style="background-color: #0A2540; border-top: 3px solid #FFC107;">
+        <div class="container">
+            <p class="mb-1 fw-semibold">&copy; Government Graduate College for Women, Gujranwala.</p>
+            <p class="mb-0 text-white-50">Official Institutional Portal &bull; Secure Feedback & Complaint Desk</p>
+        </div>
+    </footer>
+
     <script>
-        const LARAVEL_API_URL = 'http://127.0.0.1:8000/api';
+        const LARAVEL_API_URL = 'http://127.0.0.1:8000/api/';
 
         function togglePortalView(targetId) {
             document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
@@ -257,14 +264,23 @@
             .then(async res => {
                 const data = await res.json();
                 if (!res.ok) {
-                    throw new Error(data.message || data.error || 'Server request fail ho gaya.');
+                    const err = new Error(data.message || data.error || 'Request failed.');
+                    err.isApiResponse = true;
+                    throw err;
                 }
                 return data;
             })
             .then(data => successCallback(data))
             .catch(err => {
-                console.error("Laravel Network Error:", err);
-                alert("Error: " + err.message + "\n\n(Aap ka Laravel server `php artisan serve` par chalna zaroori hai)");
+                console.error("Laravel Request Error:", err);
+
+                if (err.isApiResponse) {
+                    // Backend replied normally, just with an error message (e.g. pending approval, wrong password)
+                    alert(err.message);
+                } else {
+                    // Real connection failure — backend/server not reachable
+                    alert("Unable to connect to the server.\n\nPlease make sure the Laravel server (php artisan serve) is running.");
+                }
             });
         }
 
@@ -279,7 +295,7 @@
 
             let payload = JSON.stringify({ email: email, password: newPassword });
 
-            executeLaravelRequest('/auth/reset-password', 'POST', payload, false, (data) => {
+            executeLaravelRequest('auth/reset-password', 'POST', payload, false, (data) => {
                 alert(data.message || "Password successfully reset ho gaya!");
                 togglePortalView('homeCardsSection');
             });
@@ -308,7 +324,7 @@
             formData.append('role', 'student');
             formData.append('card_image', fileInput.files[0]);
 
-            executeLaravelRequest('/auth/register', 'POST', formData, true, (data) => {
+            executeLaravelRequest('auth/register', 'POST', formData, true, (data) => {
                 alert(data.message || "Registration successful! Admin approval ka wait karein.");
                 togglePortalView('studentLoginSection');
             });
@@ -322,12 +338,12 @@
             if (!checkEmail(email) || !checkPassword(password)) return;
 
             let payload = JSON.stringify({ email: email, password: password, role: 'student' });
-            executeLaravelRequest('/auth/login', 'POST', payload, false, (data) => {
+            executeLaravelRequest('auth/login', 'POST', payload, false, (data) => {
                 alert("Login Successful! Redirecting...");
                 localStorage.setItem('user_token', data.token || data.access_token || '');
-                localStorage.setItem('user_role', data.role);
-                localStorage.setItem('user_details', JSON.stringify(data.user));
-                window.location.href = './student/student-dashboard.html';
+                localStorage.setItem('user_role', data.role || 'student');
+                localStorage.setItem('user_details', JSON.stringify(data.user || {}));
+                window.location.href = 'http://127.0.0.1:5500/student/student-dashboard.html';
             });
         }
 
@@ -350,7 +366,7 @@
             formData.append('role', 'teacher');
             formData.append('card_image', fileInput.files[0]);
 
-            executeLaravelRequest('/auth/register', 'POST', formData, true, (data) => {
+            executeLaravelRequest('auth/register', 'POST', formData, true, (data) => {
                 alert(data.message || "Teacher Account registered! Admin approval ka wait karein.");
                 togglePortalView('teacherLoginSection');
             });
@@ -364,12 +380,12 @@
             if (!checkEmail(email) || !checkPassword(password)) return;
 
             let payload = JSON.stringify({ email: email, password: password, role: 'teacher' });
-            executeLaravelRequest('/auth/login', 'POST', payload, false, (data) => {
+            executeLaravelRequest('auth/login', 'POST', payload, false, (data) => {
                 alert("Faculty Login Successful! Redirecting...");
                 localStorage.setItem('user_token', data.token || data.access_token || '');
-                localStorage.setItem('user_role', data.role);
-                localStorage.setItem('user_details', JSON.stringify(data.user));
-                window.location.href = './student/Teacher/teacher-dashboard.html';
+                localStorage.setItem('user_role', data.role || 'teacher');
+                localStorage.setItem('user_details', JSON.stringify(data.user || {}));
+                window.location.href = 'http://127.0.0.1:5500/teacher/teacher-dashboard.html';
             });
         }
 
@@ -381,23 +397,23 @@
             if (!checkEmail(email) || !checkPassword(password)) return;
 
             let payload = JSON.stringify({ email: email, password: password, role: 'admin' });
-            executeLaravelRequest('/auth/login', 'POST', payload, false, (data) => {
-                alert("Admin Access Granted!");
-                localStorage.setItem('user_token', data.token || data.access_token || '');
-                localStorage.setItem('user_role', data.role);
-                localStorage.setItem('user_details', JSON.stringify(data.user));
+            executeLaravelRequest('auth/login', 'POST', payload, false, (data) => {
+                console.log("📦 Admin Login Response:", data);
                 
-                // Correct relative path based on workspace folder structure
-                window.location.href = './admin/admin-dashboard.html';
+                if (data.token) {
+                    localStorage.setItem('user_token', data.token);
+                    console.log("✅ Token saved:", data.token);
+                } else {
+                    console.error("❌ No token in response!");
+                }
+                
+                localStorage.setItem('user_role', data.role || 'admin');
+                localStorage.setItem('user_details', JSON.stringify(data.user || {}));
+                
+                alert("Admin Access Granted!");
+                window.location.href = 'http://127.0.0.1:5500/admin/admin-dashboard.html';
             });
         }
     </script>
-
-    <footer class="text-center py-4 mt-5 small text-white" style="background-color: #0A2540; border-top: 3px solid #FFC107;">
-        <div class="container">
-            <p class="mb-1 fw-semibold">&copy; Government Graduate College for Women, Gujranwala.</p>
-            <p class="mb-0 text-white-50">Official Institutional Portal &bull; Secure Feedback & Complaint Desk</p>
-        </div>
-    </footer>
 </body>
 </html>
