@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GGCW Portal - Teacher Desk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body class="page-teacher d-flex flex-column min-vh-100 bg-white m-0 p-0">
+
+    <nav class="navbar navbar-expand exact-blue-topbar py-3 shadow-sm m-0 border-0">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center w-100">
+                <div class="d-flex align-items-center text-white">
+                    <span class="badge bg-light text-primary fw-bold px-3 py-2 border-0 shadow-sm" style="font-size: 0.9rem;">
+                        <i class="fas fa-user-tie me-1"></i> <span id="facultyDeptBadge">Faculty Desk</span>
+                    </span>
+                </div>
+   
+                <div class="d-flex gap-2 ms-auto align-items-center">
+                    <button class="btn exact-pill-btn active" onclick="showDeptComplaintsPanel(true)">
+                        Department Complaints
+                    </button>
+                    <button class="btn exact-pill-btn" onclick="showTeacherFormPanel(true)">
+                        Complaint & Feedback
+                    </button>
+                    <button class="btn exact-pill-btn" onclick="showPersonalHistoryPanel(true)">
+                        See Your History
+                    </button>
+                    <a href="../index.html" class="btn exact-pill-btn btn-logout-pill d-flex align-items-center justify-content-center" onclick="localStorage.clear();">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="w-100 p-0 m-0 flex-grow-1">
+
+        <div class="exact-hero-container w-100 m-0 p-0">
+            <img src="../assets/img/bg.png" onerror="this.onerror=null; this.src='/assets/img/bg.png';" alt="GGCW Campus Aud" class="exact-hero-image w-100 m-0 p-0">
+            <div class="exact-hero-overlay-text text-center text-white">
+                <h2 class="fw-bold m-0 text-white">We Are United</h2>
+                <p class="m-0 mt-1 text-white-50 small">We dream big!</p>
+            </div>
+        </div>
+        
+        <div class="w-100 text-center my-4 py-2">
+            <h2 class="fw-bold text-dark m-0" style="font-size: 2.2rem; font-family: sans-serif;">Welcome To Our <span class="text-primary">Faculty Portal</span></h2>
+        </div>
+
+        <div id="deptComplaintsPanel" class="w-100 m-0 p-0 mb-5">
+            <div class="d-flex justify-content-center mb-4 px-3">
+                <div class="legend-box p-3 shadow-sm border rounded text-dark bg-light d-inline-block" style="min-width: 320px;">
+                    <div class="small mb-1 text-start"><span class="color-indicator bg-legend-green"></span><strong>Resolved:</strong> Green</div>
+                    <div class="small mb-1 text-start"><span class="color-indicator bg-legend-yellow"></span><strong>Pending:</strong> Yellow</div>
+                    <div class="small text-start"><span class="color-indicator bg-legend-red"></span><strong>Unresolved:</strong> Red</div>
+                </div>
+            </div>
+
+            <div class="text-center mb-4">
+                <h3 class="fw-bold text-dark" style="font-family: sans-serif;">Total Department Complaints: <span id="deptCounter">0</span></h3>
+            </div>
+
+            <div class="w-100 p-0 m-0 border-top border-bottom">
+                <div class="table-responsive w-100 m-0 p-0">
+                    <table class="table exact-table w-100 m-0 align-middle">
+                        <thead>
+                            <tr>
+                                <th style="width: 13%;">Complaint</th>
+                                <th style="width: 17%;">Student/Staff</th>
+                                <th style="width: 15%;">Department</th>
+                                <th style="width: 18%;">Category</th>
+                                <th style="width: 20%;">Date</th>
+                                <th style="width: 17%;">Action Taken</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deptTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="teacherFormPanel" class="container mb-5" style="display: none;">
+            <div class="card form-container-desk mx-auto shadow border-0 p-4" style="max-width: 600px;">
+                <div class="d-flex border-bottom mb-4 exact-form-tabs">
+                    <button id="tabTeacherComplaint" class="w-50 fw-bold py-2 active" onclick="switchTeacherFormTab('complaint')">
+                        SUBMIT COMPLAINT
+                    </button>
+                    <button id="tabTeacherFeedback" class="w-50 fw-bold py-2" onclick="switchTeacherFormTab('feedback')">
+                        SUBMIT FEEDBACK
+                    </button>
+                </div>
+
+                <div id="teacherComplaintWrapper">
+                    <form id="teacherComplaintMainForm" onsubmit="handleTeacherSubmission(event, 'complaint');">
+                        <div class="mb-3 text-start">
+                            <label class="form-label fw-bold text-dark small m-1">Category:</label>
+                            <select id="teacherComplaintCategory" class="form-select bg-white text-dark border" required>
+                                <option value="Academic">Academic</option>
+                                <option value="Financial">Financial</option>
+                                <option value="Infrastructure">Infrastructure</option>
+                                <option value="Facilities">Facilities</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label class="form-label fw-bold text-dark small m-1">Enter your complaint:</label>
+                            <textarea id="teacherComplaintText" class="form-control bg-white text-dark border" rows="4" placeholder="Type your complaint here..." required></textarea>
+                        </div>
+                        <button type="submit" id="btnTeacherSubmitComp" class="btn btn-primary w-100 fw-bold py-2 exact-submit-btn">Submit Complaint</button>
+                    </form>
+                </div>
+
+                <div id="teacherFeedbackWrapper" style="display: none;">
+                    <form id="teacherFeedbackMainForm" onsubmit="handleTeacherSubmission(event, 'feedback');">
+                        <div class="mb-4 text-start">
+                            <label class="form-label fw-bold text-dark small m-1">Enter your feedback:</label>
+                            <textarea id="teacherFeedbackText" class="form-control bg-white text-dark border" rows="5" placeholder="Type your feedback here..." required></textarea>
+                        </div>
+                        <button type="submit" id="btnTeacherSubmitFeed" class="btn btn-primary w-100 fw-bold py-2 exact-submit-btn">Submit Feedback</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="teacherSuccessPanel" class="container mb-5" style="display: none;">
+            <div class="w-100 py-5 bg-white text-center">
+                <div class="py-4 bg-light text-center shadow-sm border-top border-bottom mb-5 generic-msg-wrapper">
+                    <h2 id="teacherSuccessText" class="fw-bold text-secondary m-0 letter-spacing-1" style="font-family: sans-serif;">
+                        YOUR COMPLAINT HAS BEEN RECEIVED!
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div id="personalHistoryPanel" class="w-100 m-0 p-0 mb-5" style="display: none;">
+            <div class="d-flex justify-content-center gap-3 mb-4 px-3">
+                <button id="historyTabTeacherComp" class="btn btn-primary fw-bold px-4 py-2" onclick="switchPersonalHistoryView('complaints')">
+                    <i class="fas fa-exclamation-circle me-1"></i> My Complaints (<span id="pCompCount">0</span>)
+                </button>
+                <button id="historyTabTeacherFeed" class="btn btn-outline-primary fw-bold px-4 py-2" onclick="switchPersonalHistoryView('feedback')">
+                    <i class="fas fa-comment-alt me-1"></i> My Feedback (<span id="pFeedCount">0</span>)
+                </button>
+            </div>
+
+            <div class="d-flex justify-content-center mb-4 px-3">
+                <div class="legend-box p-3 shadow-sm border rounded text-dark bg-light d-inline-block" style="min-width: 320px;">
+                    <div class="small mb-1 text-start"><span class="color-indicator bg-legend-green"></span><strong>Resolved:</strong> Green</div>
+                    <div class="small mb-1 text-start"><span class="color-indicator bg-legend-yellow"></span><strong>Pending:</strong> Yellow</div>
+                    <div class="small text-start"><span class="color-indicator bg-legend-red"></span><strong>Unresolved:</strong> Red</div>
+                </div>
+            </div>
+
+            <div id="personalCompSubSection" class="w-100 m-0 p-0">
+                <div class="w-100 border-top border-bottom">
+                    <div class="table-responsive w-100 m-0 p-0">
+                        <table class="table exact-table w-100 m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Complaint</th>
+                                    <th style="width: 25%;">Category</th>
+                                    <th style="width: 30%;">Date</th>
+                                    <th style="width: 25%;">Action Taken</th>
+                                </tr>
+                            </thead>
+                            <tbody id="personalCompTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="emptyPersonalCompMsg" class="text-center text-muted my-5 fs-5">No records found in personal complaints.</div>
+            </div>
+
+            <div id="personalFeedSubSection" class="w-100 m-0 p-0" style="display: none;">
+                <div class="w-100 border-top border-bottom">
+                    <div class="table-responsive w-100 m-0 p-0">
+                        <table class="table exact-table w-100 m-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Feedback View</th>
+                                    <th style="width: 50%;">Date</th>
+                                    <th style="width: 25%;">Action Taken</th>
+                                </tr>
+                            </thead>
+                            <tbody id="personalFeedTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="emptyPersonalFeedMsg" class="text-center text-muted my-5 fs-5">No records found in personal feedback.</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="complaintActionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header exact-blue-topbar text-white py-3">
+                    <h5 class="modal-title fw-bold text-white"><i class="fas fa-tasks me-2"></i> Authority Action Center</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-dark bg-white text-start">
+                    <input type="hidden" id="activeComplaintId">
+                    <div class="mb-2">
+                        <strong class="text-secondary small text-uppercase">Student / Staff Identity:</strong>
+                        <p id="actStudentRoll" class="fw-bold text-dark m-0 fs-6"></p>
+                    </div>
+                    <div class="mb-2">
+                        <strong class="text-secondary small text-uppercase">Category & Date:</strong>
+                        <p class="text-muted m-0"><span id="actCategory" class="fw-bold text-dark"></span> | <span id="actDate"></span></p>
+                    </div>
+                    <div class="mb-3">
+                        <strong class="text-secondary small text-uppercase">Complaint Statement:</strong>
+                        <p id="actDescription" class="mt-1 text-dark bg-light p-3 rounded border small" style="line-height: 1.5;"></p>
+                    </div>
+                    <hr class="text-muted my-3">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-primary small">Update Action Status:</label>
+                        <select id="actionStatusSelect" class="form-select bg-white text-dark border-primary">
+                            <option value="Unresolved">Unresolved</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Resolved">Resolved</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary small">Official Action Remarks:</label>
+                        <textarea id="actionRemarks" class="form-control bg-white text-dark border" rows="2" placeholder="e.g., Problem verified and resolved fine."></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary w-100 fw-bold py-2" onclick="saveComplaintStatusChange()">Save Status Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="generalDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header exact-blue-topbar text-white py-3">
+                    <h5 class="modal-title fw-bold text-white" id="genModalTitle">Details View</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-dark bg-white text-start">
+                    <div class="mb-2" id="genCategoryWrapper">
+                        <strong class="text-secondary small text-uppercase">Category:</strong>
+                        <p id="genCategory" class="fw-bold text-dark m-0"></p>
+                    </div>
+                    <div class="mb-2">
+                        <strong class="text-secondary small text-uppercase">Date Logged:</strong>
+                        <p id="genDate" class="text-muted m-0"></p>
+                    </div>
+                    <div class="mb-3">
+                        <strong class="text-secondary small text-uppercase">Status:</strong>
+                        <div class="mt-1"><span id="genStatusBadge" class="badge px-3 py-1.5 fw-bold"></span></div>
+                    </div>
+                    <hr class="text-muted">
+                    <div>
+                        <strong id="genLabel" class="text-secondary small text-uppercase">Content Statement:</strong>
+                        <p id="genDescription" class="mt-1 text-dark bg-light p-3 rounded border small" style="line-height: 1.6;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const BACKEND_BASE_URL = 'http://127.0.0.1:8000/api';
+        let pCompCount = 0;
+        let pFeedCount = 0;
+
+        function getAuthHeaders() {
+            const token = localStorage.getItem('user_token');
+            return {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': token ? `Bearer ${token}` : ''
+            };
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const rawUser = localStorage.getItem('user_details');
+            if (rawUser) {
+                try {
+                    const userObj = JSON.parse(rawUser);
+                    if (userObj.department) {
+                        document.getElementById('facultyDeptBadge').innerText = `${userObj.department} Desk`;
+                    }
+                } catch(e) {}
+            }
+
+            loadAllComplaints();
+
+            if (!window.history.state) {
+                window.history.replaceState({ panel: 'dept' }, '', '');
+                window.history.pushState({ panel: 'dept' }, '', '');
+            }
+        });
+
+        function loadAllComplaints() {
+            fetch(`${BACKEND_BASE_URL}/teacher/complaints`, {
+                method: 'GET',
+                headers: getAuthHeaders()
+            })
+            .then(res => res.json())
+            .then(response => {
+                const body = document.getElementById('deptTableBody');
+                body.innerHTML = ''; 
+
+                let data = Array.isArray(response) ? response : (response.data || response.complaints || []);
+                document.getElementById('deptCounter').innerText = data.length;
+
+                pCompCount = 0;
+                pFeedCount = 0;
+                const pCompBody = document.getElementById('personalCompTableBody');
+                const pFeedBody = document.getElementById('personalFeedTableBody');
+                pCompBody.innerHTML = '';
+                pFeedBody.innerHTML = '';
+
+                data.forEach(comp => {
+                    let statusClass = comp.status === 'Resolved' ? 'exact-status-green' : (comp.status === 'Pending' ? 'exact-status-yellow' : 'exact-status-red');
+                    let dbDate = comp.date_time ? comp.date_time : comp.created_at;
+                    let formattedDate = dbDate ? new Date(dbDate).toLocaleString() : 'N/A';
+                    let identityText = comp.display_name || comp.student_roll || comp.user_name || (comp.user ? comp.user.name : 'Teacher');
+                    let safeDesc = (comp.description || '').replace(/'/g, "\\'").replace(/\n/g, ' ');
+
+                    const row = `
+                        <tr id="row-comp-${comp.id}" class="${statusClass}">
+                            <td><button class="btn btn-show-complaint text-nowrap" onclick="manageComplaint('${comp.id}', '${identityText}', '${comp.category || 'General'}', '${formattedDate}', '${comp.status || 'Unresolved'}', '${safeDesc}')">Show Complaint</button></td>
+                            <td>${identityText}</td>
+                            <td>${comp.department || 'N/A'}</td>
+                            <td>${comp.category || 'General'}</td>
+                            <td>${formattedDate}</td>
+                            <td id="status-text-${comp.id}" class="fw-bold">${comp.status || 'Unresolved'}</td>
+                        </tr>
+                    `;
+                    body.innerHTML += row;
+
+                    if (comp.is_mine || comp.type === 'teacher' || comp.user_id == localStorage.getItem('user_id')) {
+                        if (comp.category === 'Feedback' || comp.type === 'feedback') {
+                            pFeedCount++;
+                            const fRow = `
+                                <tr class="${statusClass}">
+                                    <td><button class="btn btn-show-complaint text-nowrap" onclick="viewGenDetails('feedback', '', '${formattedDate}', '${comp.status || 'Submitted'}', '${safeDesc}')">View Feedback</button></td>
+                                    <td>${formattedDate}</td>
+                                    <td class="fw-bold">${comp.status || 'Submitted'}</td>
+                                </tr>
+                            `;
+                            pFeedBody.innerHTML += fRow;
+                        } else {
+                            pCompCount++;
+                            const cRow = `
+                                <tr class="${statusClass}">
+                                    <td><button class="btn btn-show-complaint text-nowrap" onclick="viewGenDetails('complaint', '${comp.category || 'General'}', '${formattedDate}', '${comp.status || 'Unresolved'}', '${safeDesc}')">View Details</button></td>
+                                    <td>${comp.category || 'General'}</td>
+                                    <td>${formattedDate}</td>
+                                    <td class="fw-bold">${comp.status || 'Unresolved'}</td>
+                                </tr>
+                            `;
+                            pCompBody.innerHTML += cRow;
+                        }
+                    }
+                });
+                updatePersonalEmptyPlaceholders();
+            })
+            .catch(err => console.error("Error loading data:", err));
+        }
+
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.panel) {
+                removeActiveHeaderPills();
+                if (event.state.panel === 'form') showTeacherFormPanel(false);
+                else if (event.state.panel === 'history') showPersonalHistoryPanel(false);
+                else if (event.state.panel === 'success') showTeacherSuccessPanel(false);
+                else showDeptComplaintsPanel(false);
+            }
+        });
+
+        function removeActiveHeaderPills() {
+            document.querySelectorAll('.exact-pill-btn').forEach(b => b.classList.remove('active'));
+        }
+
+        function showDeptComplaintsPanel(pushStateFlag) {
+            document.getElementById('teacherFormPanel').style.display = 'none';
+            document.getElementById('teacherSuccessPanel').style.display = 'none';
+            document.getElementById('personalHistoryPanel').style.display = 'none';
+            document.getElementById('deptComplaintsPanel').style.display = 'block';
+            removeActiveHeaderPills();
+            document.querySelectorAll('.exact-pill-btn')[0].classList.add('active');
+            if(pushStateFlag) window.history.pushState({ panel: 'dept' }, '', '');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showTeacherFormPanel(pushStateFlag) {
+            document.getElementById('deptComplaintsPanel').style.display = 'none';
+            document.getElementById('teacherSuccessPanel').style.display = 'none';
+            document.getElementById('personalHistoryPanel').style.display = 'none';
+            document.getElementById('teacherFormPanel').style.display = 'block';
+            removeActiveHeaderPills();
+            document.querySelectorAll('.exact-pill-btn')[1].classList.add('active');
+            if(pushStateFlag) window.history.pushState({ panel: 'form' }, '', '');
+            switchTeacherFormTab('complaint');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showPersonalHistoryPanel(pushStateFlag) {
+            document.getElementById('deptComplaintsPanel').style.display = 'none';
+            document.getElementById('teacherFormPanel').style.display = 'none';
+            document.getElementById('teacherSuccessPanel').style.display = 'none';
+            document.getElementById('personalHistoryPanel').style.display = 'block';
+            removeActiveHeaderPills();
+            document.querySelectorAll('.exact-pill-btn')[2].classList.add('active');
+            if(pushStateFlag) window.history.pushState({ panel: 'history' }, '', '');
+            switchPersonalHistoryView('complaints');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showTeacherSuccessPanel(pushStateFlag) {
+            document.getElementById('deptComplaintsPanel').style.display = 'none';
+            document.getElementById('teacherFormPanel').style.display = 'none';
+            document.getElementById('personalHistoryPanel').style.display = 'none';
+            document.getElementById('teacherSuccessPanel').style.display = 'block';
+            if(pushStateFlag) window.history.pushState({ panel: 'success' }, '', '');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchTeacherFormTab(target) {
+            const compBtn = document.getElementById('tabTeacherComplaint');
+            const feedBtn = document.getElementById('tabTeacherFeedback');
+            const compWrap = document.getElementById('teacherComplaintWrapper');
+            const feedWrap = document.getElementById('teacherFeedbackWrapper');
+            if (target === 'complaint') {
+                compBtn.classList.add('active');
+                feedBtn.classList.remove('active');
+                compWrap.style.display = 'block';
+                feedWrap.style.display = 'none';
+            } else {
+                feedBtn.classList.add('active');
+                compBtn.classList.remove('active');
+                feedWrap.style.display = 'block';
+                compWrap.style.display = 'none';
+            }
+        }
+
+        function switchPersonalHistoryView(type) {
+            const btnC = document.getElementById('historyTabTeacherComp');
+            const btnF = document.getElementById('historyTabTeacherFeed');
+            const secC = document.getElementById('personalCompSubSection');
+            const secF = document.getElementById('personalFeedSubSection');
+            if (type === 'complaints') {
+                btnC.className = "btn btn-primary fw-bold px-4 py-2";
+                btnF.className = "btn btn-outline-primary fw-bold px-4 py-2";
+                secC.style.display = 'block';
+                secF.style.display = 'none';
+            } else {
+                btnF.className = "btn btn-primary fw-bold px-4 py-2";
+                btnC.className = "btn btn-outline-primary fw-bold px-4 py-2";
+                secF.style.display = 'block';
+                secC.style.display = 'none';
+            }
+        }
+
+        function updatePersonalEmptyPlaceholders() {
+            document.getElementById('emptyPersonalCompMsg').style.display = (pCompCount === 0) ? 'block' : 'none';
+            document.getElementById('emptyPersonalFeedMsg').style.display = (pFeedCount === 0) ? 'block' : 'none';
+            document.getElementById('pCompCount').innerText = pCompCount;
+            document.getElementById('pFeedCount').innerText = pFeedCount;
+        }
+
+        function manageComplaint(id, roll, category, date, status, description) {
+            document.getElementById('activeComplaintId').value = id;
+            document.getElementById('actStudentRoll').innerText = roll ? roll : 'Teacher';
+            document.getElementById('actCategory').innerText = category;
+            document.getElementById('actDate').innerText = date;
+            document.getElementById('actDescription').innerText = description;
+            document.getElementById('actionStatusSelect').value = status;
+            document.getElementById('actionRemarks').value = "";
+            const actionModal = new bootstrap.Modal(document.getElementById('complaintActionModal'));
+            actionModal.show();
+        }
+
+        function saveComplaintStatusChange() {
+            const id = document.getElementById('activeComplaintId').value;
+            const newStatus = document.getElementById('actionStatusSelect').value;
+            const remarksVal = document.getElementById('actionRemarks').value;
+            
+            fetch(`${BACKEND_BASE_URL}/complaints/update/${id}`, {
+                method: 'PUT',
+                headers: getAuthHeaders(),
+                body: JSON.stringify({ status: newStatus, remarks: remarksVal })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const modalEl = document.getElementById('complaintActionModal');
+                const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                if (modalInstance) modalInstance.hide();
+                loadAllComplaints();
+            })
+            .catch(err => console.error("Error updating status:", err));
+        }
+
+        function handleTeacherSubmission(event, type) {
+            if (event) event.preventDefault();
+            let category = 'Feedback';
+            let description = '';
+
+            if (type === 'complaint') {
+                category = document.getElementById('teacherComplaintCategory').value;
+                description = document.getElementById('teacherComplaintText').value;
+            } else {
+                description = document.getElementById('teacherFeedbackText').value;
+            }
+
+            const payload = {
+                category: category,
+                description: description,
+                type: type === 'complaint' ? 'teacher' : 'feedback'
+            };
+
+            fetch(`${BACKEND_BASE_URL}/complaints/submit`, {
+                method: 'POST',
+                headers: getAuthHeaders(),
+                body: JSON.stringify(payload)
+            })
+            .then(res => {
+                if (res.ok || res.status === 200 || res.status === 201) {
+                    const textMsg = document.getElementById('teacherSuccessText');
+                    if(textMsg) {
+                        textMsg.innerText = type === 'complaint' ? "YOUR COMPLAINT HAS BEEN RECEIVED!" : "YOUR FEEDBACK HAS BEEN RECEIVED THANK YOU!";
+                    }
+                    
+                    document.getElementById('teacherComplaintMainForm').reset();
+                    document.getElementById('teacherFeedbackMainForm').reset();
+                    
+                    showTeacherSuccessPanel(true);
+                    
+                    setTimeout(() => { 
+                        showDeptComplaintsPanel(true);
+                        loadAllComplaints();
+                    }, 2000);
+                } else {
+                    alert("Submission failed on server. Status code: " + res.status);
+                }
+            })
+            .catch(err => {
+                console.error("Transmission error:", err);
+                alert("Network communication failed. Please check backend connection.");
+            });
+        }
+
+        function viewGenDetails(type, cat, date, status, desc) {
+            const badge = document.getElementById('genStatusBadge');
+            badge.innerText = status;
+            badge.className = "badge px-3 py-1.5 fw-bold";
+            
+            if(status === 'Resolved' || status === 'Submitted') {
+                badge.classList.add('bg-success', 'text-white');
+            } else if(status === 'Pending') {
+                badge.classList.add('bg-warning', 'text-dark');
+            } else {
+                badge.classList.add('bg-danger', 'text-white');
+            }
+            
+            document.getElementById('genDate').innerText = date;
+            document.getElementById('genDescription').innerText = desc;
+            
+            if(type === 'complaint') {
+                document.getElementById('genModalTitle').innerHTML = '<i class="fas fa-file-alt me-2"></i> Personal Complaint Details';
+                document.getElementById('genCategoryWrapper').style.display = 'block';
+                document.getElementById('genCategory').innerText = cat;
+                document.getElementById('genLabel').innerText = 'Complaint Description:';
+            } else {
+                document.getElementById('genModalTitle').innerHTML = '<i class="fas fa-comment-alt me-2"></i> Personal Feedback Details';
+                document.getElementById('genCategoryWrapper').style.display = 'none';
+                document.getElementById('genLabel').innerText = 'Feedback Suggestion:';
+            }
+            
+            const modal = new bootstrap.Modal(document.getElementById('generalDetailsModal'));
+            modal.show();
+        }
+    </script>
+
+    <footer class="text-center py-4 mt-auto small text-white w-100" style="background-color: #0A2540; border-top: 3px solid #FFC107;">
+        <div class="container">
+            <p class="mb-1 fw-semibold">&copy; Government Graduate College for Women, Gujranwala.</p>
+            <p class="mb-0 text-white-50" style="font-size: 0.75rem;">Official Institutional Portal &bull; Secure Feedback & Complaint Desk</p>
+        </div>
+    </footer>
+
+</body>
+</html>
