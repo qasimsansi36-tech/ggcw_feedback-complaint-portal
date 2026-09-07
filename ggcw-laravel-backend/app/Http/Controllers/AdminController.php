@@ -75,7 +75,7 @@ class AdminController extends Controller
         return response()->json(['success' => false, 'message' => 'User not found!'], 404);
     }
 
-    // 5. Submit Complaint
+    // 5. ✅ FIXED: Submit Complaint (student_roll column add)
     public function submitComplaint(Request $request)
     {
         DB::table('complaints')->insert([
@@ -87,6 +87,7 @@ class AdminController extends Controller
             'description' => $request->description ?? $request->message ?? '',
             'department'  => $request->department ?? null,
             'roll_no'     => $request->roll_no ?? null,
+            'student_roll' => $request->roll_no ?? null,  // ✅ ADDED for complaints table
             'status'      => 'Pending',
             'created_at'  => now(),
             'updated_at'  => now()
@@ -119,11 +120,35 @@ class AdminController extends Controller
         ]);
     }
 
-    // 7. Get All Complaints
+    // 7. Get All Complaints (Frontend Compatible)
     public function getComplaints()
     {
-        $complaints = DB::table('complaints')->latest()->get();
-        return response()->json(['success' => true, 'complaints' => $complaints]);
+        $complaints = DB::table('complaints')
+            ->select('id', 'student_roll', 'department', 'category', 'description', 'date_time', 'status', 'admin_remarks')
+            ->latest('date_time')
+            ->get();
+
+        $formatted = $complaints->map(function($item) {
+            return (object)[
+                'id' => $item->id,
+                'student_roll' => $item->student_roll,
+                'roll_no' => $item->student_roll,
+                'department' => $item->department,
+                'category' => $item->category,
+                'subject' => $item->category,
+                'description' => $item->description,
+                'date_time' => $item->date_time,
+                'created_at' => $item->date_time,
+                'status' => $item->status ?? 'Pending',
+                'admin_remarks' => $item->admin_remarks,
+                'user_name' => 'Student',
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'complaints' => $formatted
+        ]);
     }
 
     // 8. Get All Feedbacks
@@ -152,6 +177,24 @@ class AdminController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Complaint status updated successfully!'
+        ]);
+    }
+
+    // 10. Get Single Complaint Details
+    public function getComplaint($id)
+    {
+        $complaint = DB::table('complaints')->where('id', $id)->first();
+        
+        if (!$complaint) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Complaint not found.'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'complaint' => $complaint
         ]);
     }
 }

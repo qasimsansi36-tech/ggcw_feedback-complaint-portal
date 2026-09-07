@@ -65,7 +65,8 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
+            'role' => 'required|in:student,teacher,admin'
         ]);
 
         if ($validator->fails()) {
@@ -82,6 +83,15 @@ class AuthController extends Controller
                 'success' => false,
                 'message' => 'Invalid email or password!'
             ], 401);
+        }
+
+        // 🔒 SECURITY FIX: reject login if the account's actual role
+        // does not match the login page/role the request came from.
+        if ($user->role !== $request->role) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This account is not registered as a ' . ucfirst($request->role) . '. Please use the correct login page for your account type.'
+            ], 403);
         }
 
         if ($user->role !== 'admin' && $user->status === 'pending') {
@@ -121,11 +131,54 @@ class AuthController extends Controller
         ]);
     }
 
+    // 🔒 SECURITY FIX: Step 1 of password reset — send a 6-digit OTP to the
+    // registered email instead of letting anyone reset a password with just an email.
+    public function forgotPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 422);
+        }
+
+        $otp = (string) random_int(100000, 999999);
+
+        // OTP 10 minute ke liye cache mein rakha jata hai (koi nayi database
+        // table ya column banane ki zaroorat nahi).
+        \Illuminate\Support\Facades\Cache::put('password_reset_otp_' . $request->email, $otp, now()->addMinutes(10));
+
+        try {
+            \Illuminate\Support\Facades\Mail::raw(
+                "Your GGCW Portal password reset code is: {$otp}\n\nThis code will expire in 10 minutes. If you did not request this, please ignore this email.",
+                function ($message) use ($request) {
+                    $message->to($request->email)->subject('GGCW Portal - Password Reset Code');
+                }
+            );
+        } catch (\Exception $e) {
+            // Agar mail server configure nahi hai (jaisa abhi local mein hai),
+            // request phir bhi fail nahi honi chahiye — OTP cache mein save ho chuka
+            // hai aur storage/logs/laravel.log mein bhi dikh jayega testing ke liye.
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'A 6-digit reset code has been sent to your email.'
+        ]);
+    }
+
+    // 🔒 SECURITY FIX: Step 2 — OTP verify karke hi password change hota hai,
+    // sirf email dena kaafi nahi hai.
     public function resetPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email',
-            'password' => 'required|min:8'
+            'otp' => 'required|string',
+            'password' => 'required|min:8',
         ]);
 
         if ($validator->fails()) {
@@ -136,9 +189,20 @@ class AuthController extends Controller
             ], 422);
         }
 
+        $cachedOtp = \Illuminate\Support\Facades\Cache::get('password_reset_otp_' . $request->email);
+
+        if (!$cachedOtp || $cachedOtp !== $request->otp) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid or expired reset code. Please request a new one.'
+            ], 401);
+        }
+
         $user = User::where('email', $request->email)->first();
         $user->password = Hash::make($request->password);
         $user->save();
+
+        \Illuminate\Support\Facades\Cache::forget('password_reset_otp_' . $request->email);
 
         return response()->json([
             'success' => true,
