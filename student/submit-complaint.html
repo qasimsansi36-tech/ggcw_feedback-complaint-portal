@@ -2,41 +2,231 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>File Complaint - GGCW</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Complaint - GGCW</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: #f4f7fc; }
+        .complaint-card {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .complaint-card h2 {
+            color: #0A2540;
+            border-bottom: 3px solid #FFC107;
+            padding-bottom: 10px;
+        }
+        .btn-submit {
+            background: #0A2540;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .btn-submit:hover { background: #1a3a5c; color: white; }
+        .required { color: red; }
+        .navbar {
+            background: #0A2540;
+            padding: 12px 24px;
+        }
+        .navbar-brand { color: white; font-weight: bold; }
+        .navbar-brand:hover { color: #FFC107; }
+    </style>
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3 col-lg-2 p-3 sidebar student-sidebar">
-            <h5 class="text-center mb-4">GGCW Student</h5>
-            <ul class="nav flex-column">
-                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fas fa-home me-2"></i> Dashboard</a></li>
-                <li class="nav-item"><a href="submit-complaint.html" class="nav-link active"><i class="fas fa-edit me-2"></i> File Complaint</a></li>
-                <li class="nav-item"><a href="view-status.html" class="nav-link"><i class="fas fa-tasks me-2"></i> Track Status</a></li>
-            </ul>
+
+    <!-- Top Navbar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-university text-warning me-2"></i>GGCW Portal
+            </a>
+            <a href="../index.html" class="btn btn-outline-light btn-sm" onclick="localStorage.clear();">
+                <i class="fas fa-sign-out-alt me-1"></i> Logout
+            </a>
         </div>
-        <div class="col-md-9 col-lg-10 p-4">
-            <h4>Submit New Complaint</h4>
-            <form class="bg-white p-4 rounded shadow-sm mt-3">
-                <div class="mb-3">
-                    <label class="form-label">Category</label>
-                    <select class="form-select">
-                        <option>Hostel</option>
-                        <option>Academic</option>
-                        <option>Transport</option>
+    </nav>
+
+<div class="container">
+    <div class="complaint-card">
+        <h2><i class="fas fa-file-alt text-primary me-2"></i>Submit Complaint</h2>
+        <p class="text-muted">Fill the form below to submit your complaint. All fields are required unless marked optional.</p>
+
+        <form id="complaintForm">
+            <!-- Row 1: Roll No + Department -->
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Roll No <span class="required">*</span></label>
+                    <input type="text" id="studentRollNo" class="form-control" 
+                           placeholder="Your roll number" style="background: #e9ecef;">
+                    <small class="text-muted">Your roll number is auto-filled.</small>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Department <span class="required">*</span></label>
+                    <select id="department" class="form-select">
+                        <option value="IT">IT</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Commerce">Commerce</option>
+                        <option value="Psychology">Psychology</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Description</label>
-                    <textarea class="form-control" rows="4"></textarea>
+            </div>
+
+            <!-- Row 2: Category + Urgency -->
+            <div class="row g-3 mt-2">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Category <span class="required">*</span></label>
+                    <select id="complaintCategory" class="form-select">
+                        <option value="Academic">Academic</option>
+                        <option value="Administrative">Administrative</option>
+                        <option value="Facility">Facility</option>
+                        <option value="Financial">Financial</option>
+                        <option value="Harassment">Harassment</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Hostel">Hostel</option>
+                        <option value="Other">Other</option>
+                    </select>
                 </div>
-                <button type="submit" class="btn btn-ggcw">Submit</button>
-            </form>
-        </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Urgency Level <span class="required">*</span></label>
+                    <select id="urgency" class="form-select">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                        <option value="Urgent">Urgent</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Row 3: Subject -->
+            <div class="mt-3">
+                <label class="form-label fw-bold">Subject <span class="required">*</span></label>
+                <input type="text" id="complaintSubject" class="form-control" 
+                       placeholder="Brief subject of your complaint">
+            </div>
+
+            <!-- Row 4: Description -->
+            <div class="mt-3">
+                <label class="form-label fw-bold">Description <span class="required">*</span></label>
+                <textarea id="complaintDescription" class="form-control" rows="4" 
+                          placeholder="Describe your complaint in detail..."></textarea>
+            </div>
+
+            <!-- Row 5: Photo Upload -->
+            <div class="mt-3">
+                <label class="form-label fw-bold">Upload Photo <span class="text-muted">(Optional)</span></label>
+                <input type="file" id="complaintImage" class="form-control" accept="image/*">
+                <small class="text-muted">Upload any supporting image (Max 5MB).</small>
+            </div>
+
+            <!-- Row 6: Anonymous Option -->
+            <div class="mt-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="anonymousCheck">
+                    <label class="form-check-label" for="anonymousCheck">
+                        <i class="fas fa-user-secret text-warning me-1"></i> Submit Anonymously
+                        <small class="text-muted d-block">Your name will not be shown to admin.</small>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-submit w-100 mt-4">
+                <i class="fas fa-paper-plane me-2"></i> Submit Complaint
+            </button>
+        </form>
+
+        <!-- Status Message -->
+        <div id="statusMessage" class="mt-3"></div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ✅ Auto-fill roll no from localStorage
+    const userDetails = JSON.parse(localStorage.getItem('user_details') || '{}');
+    const rollNoField = document.getElementById('studentRollNo');
+    if (userDetails.roll_no) {
+        rollNoField.value = userDetails.roll_no;
+    }
+
+    document.getElementById('complaintForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const rollNo = document.getElementById('studentRollNo').value;
+        const department = document.getElementById('department').value;
+        const category = document.getElementById('complaintCategory').value;
+        const urgency = document.getElementById('urgency').value;
+        const subject = document.getElementById('complaintSubject').value.trim();
+        const description = document.getElementById('complaintDescription').value.trim();
+        const isAnonymous = document.getElementById('anonymousCheck').checked;
+
+        if (!subject || !description) {
+            alert('⚠️ Please fill in all required fields.');
+            return;
+        }
+
+        const token = localStorage.getItem('user_token');
+        if (!token) {
+            alert('⚠️ Please login first!');
+            window.location.href = '../index.html';
+            return;
+        }
+
+        const payload = {
+            roll_no: rollNo,
+            department: department,
+            category: category,
+            urgency: urgency,
+            subject: subject,
+            description: description,
+            is_anonymous: isAnonymous
+        };
+
+        console.log('📤 Submitting:', payload);
+
+        // ✅ Send to backend
+        fetch('http://127.0.0.1:8000/api/complaints', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('statusMessage').innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i> ${data.message}
+                    </div>
+                `;
+                document.getElementById('complaintForm').reset();
+                // Reset roll no
+                if (userDetails.roll_no) {
+                    document.getElementById('studentRollNo').value = userDetails.roll_no;
+                }
+                // Scroll to success message
+                document.getElementById('statusMessage').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert('❌ ' + (data.message || 'Failed to submit complaint.'));
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            alert('⚠️ Server error! Make sure backend is running.');
+        });
+    });
+});
+</script>
+
 </body>
 </html>

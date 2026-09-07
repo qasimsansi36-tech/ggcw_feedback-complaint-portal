@@ -6,9 +6,60 @@
     <title>GGCW Portal - Institutional Gateway</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="./assets/css/index.css">
+    <link rel="stylesheet" href="./assets/css/main.css">
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body class="page-index d-flex flex-column min-vh-100">
+    <!-- Disclaimer Modal -->
+<div class="modal fade" id="disclaimerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 700px;">
+    <div class="modal-content border-0 shadow-lg rounded-4">
+
+      <!-- Top bar: Logo + Portal Name -->
+      <div class="d-flex align-items-center px-4 pt-4 pb-3" style="border-bottom: 1px solid #eee;">
+        <img src="assets/img/logo.jpg" alt="GGCW Logo" style="height:55px; width:55px; object-fit:contain; border-radius:50%;" class="me-3">
+        <h5 class="fw-bold text-dark mb-0">GGCW Feedback &amp; Complaint Portal</h5>
+      </div>
+
+      <!-- Disclaimer heading -->
+      <div class="px-4 pt-3 text-start">
+        <h4 class="fw-bold text-success mb-0">Disclaimer</h4>
+      </div>
+
+      <div class="modal-body px-4 pt-2 pb-3" style="font-size: 1.05rem; line-height: 1.7;">
+        <p class="mb-2">This portal is for registering academic and institutional complaints or feedback at <strong>Government Graduate College for Women, Gujranwala</strong>.</p>
+        <p class="mb-3">Your identity will remain confidential and will only be shared with the concerned authority if necessary to resolve your complaint.</p>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="disclaimerCheck">
+          <label class="form-check-label fw-semibold" for="disclaimerCheck">
+            I have read and agree to the above.
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 px-4 pb-4">
+        <button type="button" class="btn btn-success px-4" id="disclaimerContinueBtn" disabled>Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var disclaimerModal = new bootstrap.Modal(document.getElementById('disclaimerModal'));
+    disclaimerModal.show();
+
+    var checkbox = document.getElementById('disclaimerCheck');
+    var continueBtn = document.getElementById('disclaimerContinueBtn');
+
+    checkbox.addEventListener('change', function () {
+      continueBtn.disabled = !checkbox.checked;
+    });
+
+    continueBtn.addEventListener('click', function () {
+      disclaimerModal.hide();
+    });
+  });
+</script>
 
     <nav class="navbar navbar-expand-lg institutional-navbar shadow-sm w-100">
         <div class="container-fluid px-4">
@@ -105,6 +156,7 @@
                         </div>
                         <div class="col-sm-6"><label class="form-label small fw-bold">Email Address</label><input type="email" id="studEmail" class="form-control" placeholder="name@college.edu" required></div>
                         <div class="col-sm-6"><label class="form-label small fw-bold">Create Password</label><input type="password" id="studPassword" class="form-control" placeholder="At least 8 characters" required></div>
+                        <div class="col-sm-6"><label class="form-label small fw-bold">Confirm Password</label><input type="password" id="studConfirmPassword" class="form-control" placeholder="Re-type password" required></div>
                         <div class="col-12"><label class="form-label small fw-bold">Upload College ID Card Photo <span class="text-danger">*</span></label><input type="file" id="studCardImg" class="form-control" accept="image/*" required></div>
                     </div>
                     <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-4 py-2 shadow"><i class="fas fa-database me-1"></i> Register</button>
@@ -154,6 +206,7 @@
                         </div>
                         <div class="col-sm-6"><label class="form-label small fw-bold">Official Email ID</label><input type="email" id="teachEmail" class="form-control" placeholder="faculty@ggcw.edu.pk" required></div>
                         <div class="col-sm-6"><label class="form-label small fw-bold">Create Password</label><input type="password" id="teachPassword" class="form-control" placeholder="At least 8 characters" required></div>
+                        <div class="col-sm-6"><label class="form-label small fw-bold">Confirm Password</label><input type="password" id="teachConfirmPassword" class="form-control" placeholder="Re-type password" required></div>
                         <div class="col-12"><label class="form-label small fw-bold">Upload Your Original ID Card Photo <span class="text-danger">*</span></label><input type="file" id="teachCardImg" class="form-control" accept="image/*" required></div>
                     </div>
                     <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-4 py-2 shadow"><i class="fas fa-database me-1"></i> Register</button>
@@ -188,12 +241,23 @@
                 <div class="text-center mb-4">
                     <i class="fas fa-unlock-alt fa-2x text-warning mb-2"></i>
                     <h3 class="fw-bold text-dark m-0">Reset Password</h3>
-                    <p class="text-muted small m-0">Enter registered email to set a new password</p>
+                    <p class="text-muted small m-0" id="resetStepSubtitle">Enter registered email to receive a reset code</p>
                 </div>
-                <form onsubmit="handleResetPassword(event)">
+
+                <!-- Step 1: Request the code -->
+                <form id="resetStep1Form" onsubmit="handleForgotPassword(event)">
                     <div class="mb-3">
                         <label class="form-label small fw-bold">Registered Email</label>
                         <input type="email" id="resetEmail" class="form-control" placeholder="Enter email" required>
+                    </div>
+                    <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-2 py-2 shadow">Send Reset Code</button>
+                </form>
+
+                <!-- Step 2: Enter code + new password (hidden until code is sent) -->
+                <form id="resetStep2Form" onsubmit="handleResetPassword(event)" style="display: none;">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">6-Digit Reset Code</label>
+                        <input type="text" id="resetOtp" class="form-control" placeholder="Enter code from your email" maxlength="6" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold">New Password</label>
@@ -204,13 +268,15 @@
                         <input type="password" id="resetConfirmPassword" class="form-control" placeholder="Re-type new password" required>
                     </div>
                     <button type="submit" class="btn btn-gold-action w-100 fw-bold mt-2 py-2 shadow">Reset Password</button>
+                    <button type="button" class="btn btn-link w-100 mt-2 text-decoration-none small" onclick="backToResetStep1()">
+                        <i class="fas fa-arrow-left me-1"></i> Use a different email
+                    </button>
                 </form>
             </div>
         </div>
 
     </div>
-
-    <footer class="text-center py-4 mt-auto small text-white" style="background-color: #0A2540; border-top: 3px solid #FFC107;">
+        <footer class="text-center py-4 mt-auto small text-white" style="background-color: #0A2540; border-top: 3px solid #FFC107;">
         <div class="container">
             <p class="mb-1 fw-semibold">&copy; Government Graduate College for Women, Gujranwala.</p>
             <p class="mb-0 text-white-50">Official Institutional Portal &bull; Secure Feedback & Complaint Desk</p>
@@ -225,12 +291,13 @@
             document.getElementById(targetId).classList.add('active');
         }
 
-        const nameRegex = /^[A-Za-z\s]+$/;
+        const nameRegex = /^[A-Za-z]+(\s[A-Za-z]+)*$/;
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const rollRegex = /^[A-Za-z0-9\-\/]{3,20}$/;
         
         function checkName(value, fieldName) {
             if (!value.trim()) { alert(`${fieldName} empty nahi ho sakta!`); return false; }
-            if (!nameRegex.test(value)) { alert(`${fieldName} me sirf alphabets ho sakte hain.`); return false; }
+            if (!nameRegex.test(value)) { alert(`${fieldName} mein sirf letters aur single spaces ho sakte hain (numbers/symbols/double-space allowed nahi).`); return false; }
             return true;
         }
 
@@ -239,9 +306,72 @@
             return true;
         }
 
+        function checkRollNo(value) {
+            if (!rollRegex.test(value.trim())) {
+                alert("Roll No sahi format mein likhein: sirf letters, numbers, '-' ya '/' allowed hain (3 se 20 characters).");
+                return false;
+            }
+            return true;
+        }
+
         function checkPassword(password) {
             if (password.length < 8) {
                 alert("Password kam se kam 8 characters ka hona chahiye!");
+                return false;
+            }
+            if (!/[A-Z]/.test(password)) {
+                alert("Password mein kam se kam 1 capital letter (A-Z) hona chahiye!");
+                return false;
+            }
+            if (!/[a-z]/.test(password)) {
+                alert("Password mein kam se kam 1 small letter (a-z) hona chahiye!");
+                return false;
+            }
+            if (!/[0-9]/.test(password)) {
+                alert("Password mein kam se kam 1 number hona chahiye!");
+                return false;
+            }
+            if (!/[!@#$%^&*(),.?":{}|<>_\-+=]/.test(password)) {
+                alert('Password mein kam se kam 1 special character hona chahiye (jaise ! @ # $ % waghera).');
+                return false;
+            }
+            return true;
+        }
+
+        function checkPasswordsMatch(password, confirmPassword) {
+            if (password !== confirmPassword) {
+                alert("Password aur Confirm Password match nahi kar rahe!");
+                return false;
+            }
+            return true;
+        }
+
+        function checkImageFile(fileInput) {
+            if (fileInput.files.length === 0) {
+                alert("ID Card image upload karna zaroori hai.");
+                return false;
+            }
+            const file = fileInput.files[0];
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+            if (!allowedTypes.includes(file.type)) {
+                alert("Sirf JPG, PNG, ya GIF image upload karein.");
+                return false;
+            }
+            const maxSizeBytes = 5 * 1024 * 1024;
+            if (file.size > maxSizeBytes) {
+                alert("Image ka size 5MB se zyada nahi hona chahiye.");
+                return false;
+            }
+            return true;
+        }
+
+        // Login forms sirf itna check karte hain ke field khali na ho — strict
+        // password rules (capital/number/special char) sirf naya password
+        // banate waqt (signup, reset) lagti hain, warna purane accounts jinke
+        // passwords in rules se pehle bane thay wo login hi nahi kar payenge.
+        function checkPasswordFilled(password) {
+            if (!password) {
+                alert("Password enter karna zaroori hai!");
                 return false;
             }
             return true;
@@ -275,28 +405,52 @@
                 console.error("Laravel Request Error:", err);
 
                 if (err.isApiResponse) {
-                    // Backend replied normally, just with an error message (e.g. pending approval, wrong password)
                     alert(err.message);
                 } else {
-                    // Real connection failure — backend/server not reachable
                     alert("Unable to connect to the server.\n\nPlease make sure the Laravel server (php artisan serve) is running.");
                 }
             });
         }
 
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            let email = document.getElementById('resetEmail').value;
+            if (!checkEmail(email)) return;
+
+            let payload = JSON.stringify({ email: email });
+
+            executeLaravelRequest('auth/forgot-password', 'POST', payload, false, (data) => {
+                alert(data.message || "Reset code sent! Please check your email.");
+                document.getElementById('resetStep1Form').style.display = 'none';
+                document.getElementById('resetStep2Form').style.display = 'block';
+                document.getElementById('resetStepSubtitle').innerText = 'Enter the code sent to ' + email;
+            });
+        }
+
+        function backToResetStep1() {
+            document.getElementById('resetStep2Form').style.display = 'none';
+            document.getElementById('resetStep1Form').style.display = 'block';
+            document.getElementById('resetStepSubtitle').innerText = 'Enter registered email to receive a reset code';
+            document.getElementById('resetOtp').value = '';
+            document.getElementById('resetNewPassword').value = '';
+            document.getElementById('resetConfirmPassword').value = '';
+        }
+
         function handleResetPassword(event) {
             event.preventDefault();
             let email = document.getElementById('resetEmail').value;
+            let otp = document.getElementById('resetOtp').value;
             let newPassword = document.getElementById('resetNewPassword').value;
             let confirmPassword = document.getElementById('resetConfirmPassword').value;
 
-            if (!checkEmail(email) || !checkPassword(newPassword)) return;
+            if (!checkPassword(newPassword)) return;
             if (newPassword !== confirmPassword) { alert("Passwords match nahi kar rahe!"); return; }
 
-            let payload = JSON.stringify({ email: email, password: newPassword });
+            let payload = JSON.stringify({ email: email, otp: otp, password: newPassword });
 
             executeLaravelRequest('auth/reset-password', 'POST', payload, false, (data) => {
                 alert(data.message || "Password successfully reset ho gaya!");
+                backToResetStep1();
                 togglePortalView('homeCardsSection');
             });
         }
@@ -309,10 +463,12 @@
             let department = document.getElementById('studDept').value;
             let email = document.getElementById('studEmail').value;
             let password = document.getElementById('studPassword').value;
+            let confirmPassword = document.getElementById('studConfirmPassword').value;
             let fileInput = document.getElementById('studCardImg');
 
-            if (!checkName(name, "Student Name") || !checkName(fatherName, "Father Name") || !checkEmail(email) || !checkPassword(password)) return;
-            if (fileInput.files.length === 0) { alert("ID Card image upload karna zaroori hai."); return; }
+            if (!checkName(name, "Student Name") || !checkName(fatherName, "Father Name") || !checkRollNo(rollNo) || !checkEmail(email) || !checkPassword(password)) return;
+            if (!checkPasswordsMatch(password, confirmPassword)) return;
+            if (!checkImageFile(fileInput)) return;
 
             let formData = new FormData();
             formData.append('name', name);
@@ -335,11 +491,10 @@
             let email = document.getElementById('studentLogEmail').value;
             let password = document.getElementById('studentLogPassword').value;
 
-            if (!checkEmail(email) || !checkPassword(password)) return;
+            if (!checkEmail(email) || !checkPasswordFilled(password)) return;
 
             let payload = JSON.stringify({ email: email, password: password, role: 'student' });
             executeLaravelRequest('auth/login', 'POST', payload, false, (data) => {
-                alert("Login Successful! Redirecting...");
                 localStorage.setItem('user_token', data.token || data.access_token || '');
                 localStorage.setItem('user_role', data.role || 'student');
                 localStorage.setItem('user_details', JSON.stringify(data.user || {}));
@@ -353,10 +508,12 @@
             let department = document.getElementById('teachDept').value;
             let email = document.getElementById('teachEmail').value;
             let password = document.getElementById('teachPassword').value;
+            let confirmPassword = document.getElementById('teachConfirmPassword').value;
             let fileInput = document.getElementById('teachCardImg');
 
             if (!checkName(name, "Faculty Name") || !checkEmail(email) || !checkPassword(password)) return;
-            if (fileInput.files.length === 0) { alert("ID Card image upload karna zaroori hai."); return; }
+            if (!checkPasswordsMatch(password, confirmPassword)) return;
+            if (!checkImageFile(fileInput)) return;
 
             let formData = new FormData();
             formData.append('name', name);
@@ -377,11 +534,10 @@
             let email = document.getElementById('teacherLogEmail').value;
             let password = document.getElementById('teacherLogPassword').value;
 
-            if (!checkEmail(email) || !checkPassword(password)) return;
+            if (!checkEmail(email) || !checkPasswordFilled(password)) return;
 
             let payload = JSON.stringify({ email: email, password: password, role: 'teacher' });
             executeLaravelRequest('auth/login', 'POST', payload, false, (data) => {
-                alert("Faculty Login Successful! Redirecting...");
                 localStorage.setItem('user_token', data.token || data.access_token || '');
                 localStorage.setItem('user_role', data.role || 'teacher');
                 localStorage.setItem('user_details', JSON.stringify(data.user || {}));
@@ -394,26 +550,21 @@
             let email = document.getElementById('adminEmail').value;
             let password = document.getElementById('adminPassword').value;
 
-            if (!checkEmail(email) || !checkPassword(password)) return;
+            if (!checkEmail(email) || !checkPasswordFilled(password)) return;
 
             let payload = JSON.stringify({ email: email, password: password, role: 'admin' });
             executeLaravelRequest('auth/login', 'POST', payload, false, (data) => {
-                console.log("📦 Admin Login Response:", data);
-                
                 if (data.token) {
                     localStorage.setItem('user_token', data.token);
-                    console.log("✅ Token saved:", data.token);
-                } else {
-                    console.error("❌ No token in response!");
-                }
+                } 
                 
                 localStorage.setItem('user_role', data.role || 'admin');
                 localStorage.setItem('user_details', JSON.stringify(data.user || {}));
                 
-                alert("Admin Access Granted!");
                 window.location.href = 'http://127.0.0.1:5500/admin/admin-dashboard.html';
             });
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -7,100 +7,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
-    <link rel="stylesheet" href="/assets/css/admin-dashboard.css">
-    <link rel="stylesheet" href="../assets/css/admin-dashboard.css">
-    <link rel="stylesheet" href="../assets/css/student-dashboard.css">
+    <link rel="stylesheet" href="../assets/css/main.css">
 
-    <style>
-        .exact-blue-topbar {
-            background-color: #0d8abc !important;
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .exact-back-nav-btn {
-            color: #ffffff !important;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        .exact-pill-btn {
-            background-color: #0d8abc;
-            color: #ffffff !important;
-            border: 1px solid #ffffff;
-            border-radius: 20px;
-            padding: 6px 18px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-        }
-        .exact-pill-btn.active, .exact-pill-btn:hover {
-            background-color: #ffffff !important;
-            color: #0d8abc !important;
-        }
-        .exact-hero-container {
-            position: relative;
-            width: 100%;
-            max-height: 400px;
-            overflow: hidden;
-        }
-        .exact-hero-image {
-            width: 100%;
-            height: 380px;
-            object-fit: cover;
-            display: block;
-        }
-        .exact-hero-overlay-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.45);
-            padding: 20px 40px;
-            border-radius: 8px;
-            text-align: center;
-            color: #ffffff;
-        }
-        .exact-table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .exact-table thead tr {
-            background-color: #000000 !important;
-            color: #ffffff !important;
-        }
-        .exact-table th {
-            background-color: #000000 !important;
-            color: #ffffff !important;
-            padding: 12px;
-            font-weight: 600;
-            text-align: center;
-        }
-        .exact-table td {
-            text-align: center;
-            padding: 12px;
-            border-bottom: 1px solid #dee2e6;
-        }
-        .exact-status-green { background-color: #d4edda !important; }
-        .exact-status-yellow { background-color: #fff3cd !important; }
-        .exact-status-red { background-color: #f8d7da !important; }
-        .btn-action-trigger {
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            padding: 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #ccc;
-        }
-    </style>
 </head>
-<body class="d-flex flex-column min-vh-100 bg-white m-0 p-0">
+<body class="d-flex flex-column min-vh-100 bg-white m-0 p-0 page-admin">
 
     <div class="exact-blue-topbar shadow-sm">
         <a href="../index.html" onclick="if(window.history.length > 1) { window.history.back(); return false; }" class="exact-back-nav-btn">
@@ -180,24 +90,23 @@
                 <!-- Search & Filter -->
                 <div class="row g-3 mb-3">
                     <div class="col-md-3">
-                        <input type="text" id="complaint-search" class="form-control" placeholder="Search by name/roll no...">
+                        <input type="text" id="complaint-search" class="form-control" placeholder="Search by roll no or name...">
                     </div>
                     <div class="col-md-3">
                         <select id="complaint-category-filter" class="form-select">
                             <option value="">All Categories</option>
                             <option value="Academic">Academic</option>
-                            <option value="Administrative">Administrative</option>
-                            <option value="Facility">Facility</option>
-                            <option value="Harassment">Harassment</option>
-                            <option value="Other">Other</option>
+                            <option value="Financial">Financial</option>
+                            <option value="Infrastructure">Infrastructure</option>
+                            <option value="Facilities">Facilities</option>
                         </select>
                     </div>
                     <div class="col-md-3">
                         <select id="complaint-status-filter" class="form-select">
                             <option value="">All Status</option>
+                            <option value="Unresolved">Unresolved</option>
                             <option value="Pending">Pending</option>
                             <option value="Resolved">Resolved</option>
-                            <option value="Rejected">Rejected</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -210,17 +119,16 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Student Name</th>
                                 <th>Roll No</th>
                                 <th>Category</th>
-                                <th>Subject</th>
+                                <th>Complaint</th>
                                 <th>Status</th>
                                 <th>Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="complaints-table-body">
-                            <tr><td colspan="8" class="text-center text-muted">Loading complaints...</td></tr>
+                            <tr><td colspan="7" class="text-center text-muted">Loading complaints...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -260,18 +168,19 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p><strong>Student:</strong> <span id="modal-complaint-name"></span></p>
                     <p><strong>Roll No:</strong> <span id="modal-complaint-roll"></span></p>
                     <p><strong>Category:</strong> <span id="modal-complaint-category"></span></p>
-                    <p><strong>Subject:</strong> <span id="modal-complaint-subject"></span></p>
-                    <p><strong>Description:</strong> <span id="modal-complaint-description"></span></p>
+                    <p><strong>Date:</strong> <span id="modal-complaint-date"></span></p>
+                    <hr>
+                    <p><strong>Full Complaint:</strong></p>
+                    <p class="bg-light p-3 rounded" id="modal-complaint-description" style="white-space: pre-wrap;"></p>
                     <hr>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Update Status</label>
                         <select id="modal-complaint-status" class="form-select">
+                            <option value="Unresolved">Unresolved</option>
                             <option value="Pending">Pending</option>
                             <option value="Resolved">Resolved</option>
-                            <option value="Rejected">Rejected</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -293,6 +202,35 @@
         const BACKEND_BASE_URL = 'http://127.0.0.1:8000';
         let currentRole = 'student';
         let currentComplaintId = null;
+        let teacherNameMap = {};
+        let teacherNameMapLoaded = false;
+        let allComplaintsData = [];
+
+        function loadTeacherNameMap() {
+            return fetch(`${BACKEND_BASE_URL}/api/admin/users/teachers`, {
+                method: 'GET',
+                headers: getAuthHeaders()
+            })
+            .then(res => res.json())
+            .then(data => {
+                const teachers = data.users || [];
+                teachers.forEach(t => {
+                    teacherNameMap[t.id] = t.name || 'Teacher';
+                });
+                teacherNameMapLoaded = true;
+            })
+            .catch(err => {
+                console.error('Error loading teacher list for name lookup:', err);
+            });
+        }
+
+        function resolveIdentity(rawRoll) {
+            if (rawRoll && String(rawRoll).startsWith('TEACHER:')) {
+                const teacherId = String(rawRoll).replace('TEACHER:', '');
+                return teacherNameMap[teacherId] || 'Teacher';
+            }
+            return rawRoll || 'N/A';
+        }
 
         document.addEventListener("DOMContentLoaded", function() {
             const token = localStorage.getItem('user_token');
@@ -469,66 +407,70 @@
         }
 
         function fetchComplaints() {
-            fetch(`${BACKEND_BASE_URL}/api/admin/complaints`, {
-                method: 'GET',
-                headers: getAuthHeaders()
-            })
-            .then(res => res.json())
-            .then(data => {
-                const tbody = document.getElementById('complaints-table-body');
-                tbody.innerHTML = '';
-                const complaints = data.complaints || [];
-                
-                if (complaints.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No complaints found.</td></tr>';
-                    return;
-                }
+            const ensureMap = teacherNameMapLoaded ? Promise.resolve() : loadTeacherNameMap();
 
-                complaints.forEach(c => {
-                    let statusClass = c.status === 'Resolved' ? 'exact-status-green' : (c.status === 'Rejected' ? 'exact-status-red' : 'exact-status-yellow');
-                    tbody.innerHTML += `
-                        <tr class="${statusClass}">
-                            <td>#${c.id}</td>
-                            <td>${c.user_name || 'N/A'}</td>
-                            <td>${c.roll_no || 'N/A'}</td>
-                            <td>${c.category || 'General'}</td>
-                            <td>${c.subject || 'N/A'}</td>
-                            <td class="fw-bold">${c.status || 'Pending'}</td>
-                            <td>${c.created_at ? new Date(c.created_at).toLocaleDateString() : 'N/A'}</td>
-                            <td>
-                                <button class="btn btn-sm btn-primary" onclick="viewComplaint(${c.id})">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
+            ensureMap.then(() => {
+                fetch(`${BACKEND_BASE_URL}/api/admin/complaints`, {
+                    method: 'GET',
+                    headers: getAuthHeaders()
+                })
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('complaints-table-body');
+                    tbody.innerHTML = '';
+                    const complaints = data.complaints || [];
+                    allComplaintsData = complaints;
+                    
+                    if (complaints.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">No complaints found.</td></tr>';
+                        return;
+                    }
+
+                    complaints.forEach(c => {
+                        let statusClass = c.status === 'Resolved' ? 'exact-status-green' : (c.status === 'Pending' ? 'exact-status-yellow' : 'exact-status-red');
+                        let shortDesc = c.description ? c.description.substring(0, 35) + (c.description.length > 35 ? '...' : '') : 'N/A';
+                        let identityText = resolveIdentity(c.roll_no || c.student_roll);
+                        tbody.innerHTML += `
+                            <tr class="${statusClass}">
+                                <td>#${c.id}</td>
+                                <td>${identityText}</td>
+                                <td>${c.category || 'General'}</td>
+                                <td>${shortDesc}</td>
+                                <td class="fw-bold">${c.status || 'Pending'}</td>
+                                <td>${c.date_time ? new Date(c.date_time).toLocaleDateString() : 'N/A'}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" onclick="viewComplaint(${c.id})">
+                                        <i class="fas fa-tasks"></i> View / Resolve
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    document.getElementById('complaints-table-body').innerHTML = 
+                        '<tr><td colspan="7" class="text-danger text-center">⚠️ Failed to load complaints</td></tr>';
                 });
-            })
-            .catch(err => console.error('Error:', err));
+            });
         }
 
         function viewComplaint(id) {
             currentComplaintId = id;
-            fetch(`${BACKEND_BASE_URL}/api/admin/complaints`, {
-                method: 'GET',
-                headers: getAuthHeaders()
-            })
-            .then(res => res.json())
-            .then(data => {
-                const complaint = (data.complaints || []).find(c => c.id == id);
-                if (!complaint) return;
 
-                document.getElementById('modal-complaint-name').textContent = complaint.user_name || 'N/A';
-                document.getElementById('modal-complaint-roll').textContent = complaint.roll_no || 'N/A';
-                document.getElementById('modal-complaint-category').textContent = complaint.category || 'General';
-                document.getElementById('modal-complaint-subject').textContent = complaint.subject || 'N/A';
-                document.getElementById('modal-complaint-description').textContent = complaint.description || 'No description.';
-                document.getElementById('modal-complaint-status').value = complaint.status || 'Pending';
-                document.getElementById('modal-complaint-remarks').value = complaint.admin_remarks || '';
-                
-                new bootstrap.Modal(document.getElementById('complaintModal')).show();
-            })
-            .catch(err => console.error('Error:', err));
+            const c = allComplaintsData.find(item => item.id === id || item.id == id);
+            if (!c) {
+                alert('❌ Complaint not found!');
+                return;
+            }
+            document.getElementById('modal-complaint-roll').textContent = resolveIdentity(c.student_roll || c.roll_no);
+            document.getElementById('modal-complaint-category').textContent = c.category || 'General';
+            document.getElementById('modal-complaint-date').textContent = c.date_time ? new Date(c.date_time).toLocaleString() : 'N/A';
+            document.getElementById('modal-complaint-description').textContent = c.description || 'No description.';
+            document.getElementById('modal-complaint-status').value = c.status || 'Unresolved';
+            document.getElementById('modal-complaint-remarks').value = c.admin_remarks || '';
+
+            new bootstrap.Modal(document.getElementById('complaintModal')).show();
         }
 
         function updateComplaintStatus() {
@@ -550,10 +492,13 @@
                     bootstrap.Modal.getInstance(document.getElementById('complaintModal')).hide();
                     fetchComplaints();
                 } else {
-                    alert('❌ Failed to update!');
+                    alert('❌ ' + (data.message || 'Failed to update!'));
                 }
             })
-            .catch(err => alert('⚠️ Server error!'));
+            .catch(err => {
+                console.error('Error:', err);
+                alert('⚠️ Server error!');
+            });
         }
 
         function filterComplaints() {
@@ -562,13 +507,12 @@
             const status = document.getElementById('complaint-status-filter').value;
 
             document.querySelectorAll('#complaints-table-body tr').forEach(row => {
-                const name = row.cells[1]?.textContent.toLowerCase() || '';
-                const roll = row.cells[2]?.textContent.toLowerCase() || '';
-                const cat = row.cells[3]?.textContent || '';
-                const stat = row.cells[5]?.textContent || '';
+                const roll = row.cells[1]?.textContent.toLowerCase() || '';
+                const cat = row.cells[2]?.textContent || '';
+                const stat = row.cells[4]?.textContent || '';
 
                 let match = true;
-                if (search && !name.includes(search) && !roll.includes(search)) match = false;
+                if (search && !roll.includes(search)) match = false;
                 if (category && cat !== category) match = false;
                 if (status && stat !== status) match = false;
                 row.style.display = match ? '' : 'none';
@@ -616,4 +560,19 @@
                     <h6 class="modal-title fw-bold text-white"><i class="fas fa-id-card me-2 text-warning"></i>Verification Document Scan</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <
+                <div class="modal-body text-center bg-light p-4">
+                    <img id="previewing-doc-frame" src="" class="img-fluid rounded border shadow-sm" alt="Document Asset Preview" style="max-height: 450px; width: 100%; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center py-4 mt-auto small text-white w-100" style="background-color: #0A2540; border-top: 3px solid #FFC107;">
+        <div class="container">
+            <p class="mb-1 fw-semibold">&copy; Government Graduate College for Women, Gujranwala.</p>
+            <p class="mb-0 text-white-50" style="font-size: 0.75rem;">Official Institutional Portal &bull; System Control & Management Center</p>
+        </div>
+    </footer>
+
+</body>
+</html>

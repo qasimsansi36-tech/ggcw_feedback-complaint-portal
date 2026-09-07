@@ -4,20 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GGCW Portal - Student Desk</title>
-    <!-- Bootstrap 5 Framework -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Links to External Separate Stylesheet -->
-    <link rel="stylesheet" href="../assets/css/student-dashboard.css">
+    <link rel="stylesheet" href="../assets/css/main.css">
 </head>
-<body class="d-flex flex-column min-vh-100 bg-white m-0 p-0">
+<body class="page-student d-flex flex-column min-vh-100 bg-white m-0 p-0">
 
-    <!-- BLUE BAR TOP NAVIGATION HEADER -->
     <nav class="navbar navbar-expand exact-blue-topbar py-3 shadow-sm m-0 border-0">
         <div class="container-fluid px-4">
             <div class="d-flex align-items-center w-100">
-                <!-- Right Aligned Main Dashboard Controls -->
                 <div class="d-flex gap-3 ms-auto align-items-center">
                     <button class="btn exact-pill-btn" onclick="showFormPanel(true)">
                         Complaint & feedback
@@ -33,10 +28,8 @@
         </div>
     </nav>
 
-    <!-- MAIN CONTENT LAYOUT LAYER -->
     <div class="w-100 p-0 m-0 flex-grow-1">
 
-        <!-- Image Container with Fixed Height Control -->
         <div class="exact-hero-container w-100 m-0 p-0">
             <img src="../assets/img/bg.png" alt="GGCW Campus Aud" class="exact-hero-image w-100 m-0 p-0">
             
@@ -51,16 +44,13 @@
             </div>
         </div>
         
-        <!-- Welcome Title Section -->
         <div class="w-100 text-center my-4 py-2">
             <h2 class="fw-bold text-dark m-0" style="font-size: 2.2rem; font-family: sans-serif;">Welcome To Our <span class="text-primary">College Desk</span></h2>
         </div>
 
-        <!-- PANEL 1: INTERACTIVE FORM HOLDER -->
         <div id="formCapturePanel" class="container mb-5">
             <div class="card form-container-desk mx-auto shadow border-0 p-4" style="max-width: 600px;">
                 
-                <!-- DUAL SELECTION TABS -->
                 <div class="d-flex border-bottom mb-4 exact-form-tabs">
                     <button id="tabComplaint" class="w-50 fw-bold py-2 active" onclick="switchFormTab('complaint')">
                         Submit Complaint
@@ -70,7 +60,6 @@
                     </button>
                 </div>
 
-                <!-- SUB-PANEL A: COMPLAINTS FORM -->
                 <div id="complaintFormWrapper">
                     <form id="complaintMainForm" onsubmit="event.preventDefault(); handleSubmission('complaint');">
                         <div class="mb-3">
@@ -98,7 +87,6 @@
                     </form>
                 </div>
 
-                <!-- SUB-PANEL B: FEEDBACK FORM -->
                 <div id="feedbackFormWrapper" style="display: none;">
                     <form id="feedbackMainForm" onsubmit="event.preventDefault(); handleSubmission('feedback');">
                         <div class="mb-3">
@@ -116,7 +104,6 @@
             </div>
         </div>
 
-        <!-- PANEL 2: SUCCESS RECEIVED SCREEN -->
         <div id="successResponsePanel" class="container mb-5" style="display: none;">
             <div class="w-100 py-5 bg-white text-center">
                 <div class="py-4 bg-light text-center shadow-sm border-top border-bottom mb-5 generic-msg-wrapper">
@@ -127,10 +114,8 @@
             </div>
         </div>
 
-        <!-- PANEL 3: HISTORY GRID PANEL (COMPLAINTS & FEEDBACK) -->
         <div id="complaintsTablePanel" class="container-fluid px-4 mb-5" style="display: none;">
             
-            <!-- HISTORY TYPE SELECTION MINI-TABS -->
             <div class="d-flex justify-content-center gap-3 mb-4">
                 <button id="historyTabComplaints" class="btn btn-outline-primary active fw-bold px-4 py-2" onclick="switchHistoryView('complaints')">
                     <i class="fas fa-exclamation-circle me-1"></i> My Complaints (<span id="complaintBadgeCount">0</span>)
@@ -140,16 +125,13 @@
                 </button>
             </div>
 
-            <!-- COMPLAINTS VIEW WRAPPER -->
             <div id="complaintsViewSubSection">
-                <!-- Simplified 3-Status Legend Box Header -->
                 <div class="legend-box mx-auto p-3 mb-4 shadow-sm">
                     <div class="small mb-1"><span class="color-indicator bg-legend-green"></span><strong>Resolved:</strong> Green</div>
                     <div class="small mb-1"><span class="color-indicator bg-legend-yellow"></span><strong>Pending:</strong> Yellow</div>
                     <div class="small"><span class="color-indicator bg-legend-red"></span><strong>Unresolved:</strong> Red</div>
                 </div>
 
-                <!-- Responsive Table Render Layout -->
                 <div class="table-responsive shadow-sm">
                     <table class="table exact-table w-100 m-0">
                         <thead>
@@ -161,14 +143,12 @@
                             </tr>
                         </thead>
                         <tbody id="complaintsTableBody">
-                            <!-- Student's personal complaints dynamically append here -->
                         </tbody>
                     </table>
                 </div>
                 <div id="emptyComplaintsMsg" class="text-center text-muted my-4">You have not submitted any complaint yet.</div>
             </div>
 
-            <!-- FEEDBACK VIEW WRAPPER -->
             <div id="feedbackViewSubSection" style="display: none;">
                 <div class="table-responsive shadow-sm">
                     <table class="table exact-table w-100 m-0">
@@ -180,7 +160,6 @@
                             </tr>
                         </thead>
                         <tbody id="feedbackTableBody">
-                            <!-- Student's personal feedback dynamically append here -->
                         </tbody>
                     </table>
                 </div>
@@ -191,7 +170,6 @@
 
     </div>
 
-    <!-- BOOTSTRAP MODAL FOR SHOWING COMPLAINT/FEEDBACK DETAILS -->
     <div class="modal fade" id="complaintViewModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
@@ -238,7 +216,6 @@
                 window.history.pushState({ panel: 'form' }, '', '');
             }
 
-            // Auto-fill roll number from cached session details
             const rawUser = localStorage.getItem('user_details');
             if (rawUser) {
                 try {
