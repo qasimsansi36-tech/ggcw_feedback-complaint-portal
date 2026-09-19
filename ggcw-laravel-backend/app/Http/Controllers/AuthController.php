@@ -2,27 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserApprovedMail;
+use App\Mail\UserRejectedMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+               $validator = Validator::make($request->all(), [
+            // ðŸ”’ SECURITY FIX: naam aur roll number mein ab sirf wahi
+            // characters allow hain jo frontend form pehle hi allow karta
+            // hai (letters/spaces naam ke liye, letters/numbers/-// roll
+            // ke liye) â€” is se koi bhi seedha API call karke ajeeb/harmful
+            // text save nahi kar sakta.
+            'name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z]+(\s[A-Za-z]+)*$/'],
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
-            'role' => 'required|in:student,teacher,admin',
-            'father_name' => 'nullable|string|max:255',
-            'roll_no' => 'nullable|string|max:255|unique:users,roll_no',
+            'role' => 'required|in:student,teacher',
+            'father_name' => ['nullable', 'string', 'max:255', 'regex:/^[A-Za-z]+(\s[A-Za-z]+)*$/'],
+            'roll_no' => ['nullable', 'string', 'max:255', 'unique:users,roll_no', 'regex:/^[A-Za-z0-9\-\/]{3,20}$/'],
             'department' => 'nullable|string|max:255',
             'card_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120'
         ]);
-
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -85,8 +94,6 @@ class AuthController extends Controller
             ], 401);
         }
 
-        // 🔒 SECURITY FIX: reject login if the account's actual role
-        // does not match the login page/role the request came from.
         if ($user->role !== $request->role) {
             return response()->json([
                 'success' => false,
@@ -94,11 +101,19 @@ class AuthController extends Controller
             ], 403);
         }
 
-        if ($user->role !== 'admin' && $user->status === 'pending') {
+        if ($user->status === 'pending') {
             return response()->json([
                 'success' => false,
                 'is_pending' => true,
                 'message' => 'Your account is pending admin approval.'
+            ], 403);
+        }
+
+        if ($user->status === 'rejected') {
+            return response()->json([
+                'success' => false,
+                'is_rejected' => true,
+                'message' => 'Your registration request was rejected by the admin. Please contact the administration office for details.'
             ], 403);
         }
 
@@ -131,8 +146,6 @@ class AuthController extends Controller
         ]);
     }
 
-    // 🔒 SECURITY FIX: Step 1 of password reset — send a 6-digit OTP to the
-    // registered email instead of letting anyone reset a password with just an email.
     public function forgotPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -148,8 +161,6 @@ class AuthController extends Controller
 
         $otp = (string) random_int(100000, 999999);
 
-        // OTP 10 minute ke liye cache mein rakha jata hai (koi nayi database
-        // table ya column banane ki zaroorat nahi).
         \Illuminate\Support\Facades\Cache::put('password_reset_otp_' . $request->email, $otp, now()->addMinutes(10));
 
         try {
@@ -160,9 +171,7 @@ class AuthController extends Controller
                 }
             );
         } catch (\Exception $e) {
-            // Agar mail server configure nahi hai (jaisa abhi local mein hai),
-            // request phir bhi fail nahi honi chahiye — OTP cache mein save ho chuka
-            // hai aur storage/logs/laravel.log mein bhi dikh jayega testing ke liye.
+            Log::warning('Password reset email failed to send: ' . $e->getMessage());
         }
 
         return response()->json([
@@ -171,8 +180,6 @@ class AuthController extends Controller
         ]);
     }
 
-    // 🔒 SECURITY FIX: Step 2 — OTP verify karke hi password change hota hai,
-    // sirf email dena kaafi nahi hai.
     public function resetPassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -219,7 +226,6 @@ class AuthController extends Controller
         ]);
     }
 
-    // ✅ NEW: Get only Students
     public function getStudents()
     {
         $students = User::where('role', 'student')->get();
@@ -229,7 +235,6 @@ class AuthController extends Controller
         ]);
     }
 
-    // ✅ NEW: Get only Teachers
     public function getTeachers()
     {
         $teachers = User::where('role', 'teacher')->get();
@@ -255,6 +260,12 @@ class AuthController extends Controller
             'approved_at' => now()
         ]);
 
+        try {
+            Mail::to($user->email)->send(new UserApprovedMail($user));
+        } catch (\Exception $e) {
+            Log::warning('Approval email failed to send for user ' . $user->id . ': ' . $e->getMessage());
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'User approved successfully!',
@@ -262,7 +273,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function rejectUser($id)
+    public function rejectUser(Request $request, $id)
     {
         $user = User::find($id);
         if (!$user) {
@@ -277,6 +288,14 @@ class AuthController extends Controller
             'status' => 'rejected',
             'rejected_at' => now()
         ]);
+
+        $reason = $request->input('reason');
+
+        try {
+            Mail::to($user->email)->send(new UserRejectedMail($user, $reason));
+        } catch (\Exception $e) {
+            Log::warning('Rejection email failed to send for user ' . $user->id . ': ' . $e->getMessage());
+        }
 
         return response()->json([
             'success' => true,

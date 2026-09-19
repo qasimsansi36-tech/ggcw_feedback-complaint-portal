@@ -72,10 +72,6 @@ class ComplaintController extends Controller
 
         $user = $request->user();
 
-        // 🔒 SECURITY FIX: pehle client se bheja hua 'roll' field seedha save ho
-        // raha tha, matlab koi bhi student kisi doosre student ke roll number se
-        // complaint daal sakta tha. Ab hamesha login karne wale user ka apna
-        // roll_no hi use hoga, request se bheja gaya roll ignore hota hai.
         $type = $request->input('type', 'complaint');
 
         $complaint = Complaint::create([
@@ -114,13 +110,11 @@ class ComplaintController extends Controller
         ]);
     }
 
-    // ✅ NAYA: teacher khud complaint/feedback submit karta hai
+    // âœ… teacher khud complaint/feedback submit karta hai
     public function teacherSubmit(Request $request)
     {
         $user = $request->user();
 
-        // 🔒 SECURITY FIX: sirf teacher (ya admin) hi is route se submit kar sake,
-        // koi student seedha URL call karke teacher jaisi entry na bana sake.
         if (!in_array($user->role, ['teacher', 'admin'])) {
             return response()->json([
                 'success' => false,
@@ -159,13 +153,11 @@ class ComplaintController extends Controller
         ], 201);
     }
 
-    // ✅ NAYA: teacher apne department ki saari complaints + apni history dekhta hai
+    // âœ… teacher apne department ki saari complaints + apni history dekhta hai
     public function teacherDepartmentComplaints(Request $request)
     {
         $user = $request->user();
 
-        // 🔒 SECURITY FIX: sirf teacher/admin apne department ki complaints dekh sakein,
-        // koi student is URL se doosre logon ki complaints na dekh sake.
         if (!in_array($user->role, ['teacher', 'admin'])) {
             return response()->json([
                 'success' => false,
@@ -185,7 +177,11 @@ class ComplaintController extends Controller
                     $item->display_name = $teacherUser ? $teacherUser->name : 'Teacher';
                     $item->type = ($item->category === 'Feedback') ? 'feedback' : 'teacher';
                 } else {
-                    $item->display_name = $item->student_roll;
+                    // ðŸ”’ PRIVACY FIX: student ka asal naam/roll number teacher ko
+                    // kabhi nahi bhejna â€” sirf generic 'Student' label bhejna hai,
+                    // taake teacher kisi khaas student ki pehchan na jaan sake aur
+                    // bias na ho. (Pehle yahan asal student_roll bhej dete the.)
+                    $item->display_name = 'Student';
                     $item->type = ($item->category === 'Feedback') ? 'feedback' : 'complaint';
                 }
 
@@ -198,13 +194,11 @@ class ComplaintController extends Controller
         ]);
     }
 
-    // ✅ NAYA: teacher kisi complaint ka status/remarks update karta hai
+    // âœ… teacher kisi complaint ka status/remarks update karta hai
     public function teacherUpdateStatus(Request $request, $id)
     {
         $user = $request->user();
 
-        // 🔒 SECURITY FIX: sirf teacher/admin hi kisi complaint ka status/remarks
-        // badal sakein — pehle koi bhi logged-in student ye kar sakta tha.
         if (!in_array($user->role, ['teacher', 'admin'])) {
             return response()->json([
                 'success' => false,
@@ -219,6 +213,13 @@ class ComplaintController extends Controller
                 'success' => false,
                 'message' => 'Complaint not found.'
             ], 404);
+        }
+
+        if ($complaint->student_roll === 'TEACHER:' . $user->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You cannot update the status of your own complaint.'
+            ], 403);
         }
 
         $complaint->update([

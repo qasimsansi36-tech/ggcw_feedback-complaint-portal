@@ -82,6 +82,11 @@
                 <img src="assets/img/logo.jpg" alt="GGCW Corporate Seal" class="main-institutional-crest shadow-lg">
             </div>
 
+            <!-- Only Student & Teacher desks are shown here. Admin login is
+                 intentionally NOT displayed on the public homepage — real
+                 institutional portals never advertise an admin panel to every
+                 visitor. Admin can still reach it via the small "Admin" link
+                 in the footer below. -->
             <div class="row g-4 w-100 master-layout-lock justify-content-center px-2 mx-auto">
                 <div class="col-xl-4 col-md-6">
                     <div class="card terminal-box text-white p-4 shadow-lg">
@@ -98,15 +103,6 @@
                         <h4 class="fw-bold mb-3 card-header-title">Teacher Desk</h4>
                         <button class="btn btn-gold-action w-100 fw-bold mb-3 py-2" onclick="togglePortalView('teacherLoginSection')">Teacher Login</button>
                         <div class="signup-trigger-area"><a href="#" class="portal-signup-link" onclick="togglePortalView('teacherSignUpSection')">Sign-up</a></div>
-                    </div>
-                </div>
-
-                <div class="col-xl-4 col-md-6">
-                    <div class="card terminal-box admin-gate-override text-white p-4 shadow-lg d-flex flex-column justify-content-center">
-                        <div class="portal-avatar-icon mb-3"><i class="fas fa-user-shield"></i></div>
-                        <h4 class="fw-bold mb-3 card-header-title">Admin Desk</h4>
-                        <button class="btn btn-danger-action w-100 fw-bold py-2" onclick="togglePortalView('adminLoginSection')">Admin Login</button>
-                        <div class="signup-trigger-area py-2"></div>
                     </div>
                 </div>
             </div>
@@ -225,7 +221,7 @@
                     <h3 class="fw-bold text-danger m-0">Admin Secure Login</h3>
                 </div>
                 <form onsubmit="validateAdminLogin(event)">
-                    <div class="mb-3"><label class="form-label small fw-bold text-dark">System Email ID</label><input type="email" id="adminEmail" class="form-control" placeholder="admin@ggcw.edu.pk" required></div>
+                    <div class="mb-3"><label class="form-label small fw-bold text-dark">System Email ID</label><input type="email" id="adminEmail" class="form-control" placeholder="" required></div>
                     <div class="mb-3"><label class="form-label small fw-bold text-dark">Master Password</label><input type="password" id="adminPassword" class="form-control" placeholder="Enter root password" required></div>
                     <button type="submit" class="btn btn-danger w-100 fw-bold mt-2 py-2 shadow">Secure Login</button>
                 </form>
@@ -280,15 +276,21 @@
         <div class="container">
             <p class="mb-1 fw-semibold">&copy; Government Graduate College for Women, Gujranwala.</p>
             <p class="mb-0 text-white-50">Official Institutional Portal &bull; Secure Feedback & Complaint Desk</p>
+            <!-- Small, unobtrusive admin entry point — not a visible card,
+                 just like real institutional systems handle staff-only access. -->
+            <p class="mb-0 mt-2">
+                <a href="#" onclick="togglePortalView('adminLoginSection'); return false;" class="text-white-50" style="font-size: 0.72rem; text-decoration: none; opacity: 0.6;">Admin</a>
+            </p>
         </div>
     </footer>
 
     <script>
-        const LARAVEL_API_URL = 'http://127.0.0.1:8000/api/';
+        const LARAVEL_API_URL = 'http://127.0.0.1:8000/api';
 
         function togglePortalView(targetId) {
             document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
             document.getElementById(targetId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         const nameRegex = /^[A-Za-z]+(\s[A-Za-z]+)*$/;
@@ -365,10 +367,6 @@
             return true;
         }
 
-        // Login forms sirf itna check karte hain ke field khali na ho — strict
-        // password rules (capital/number/special char) sirf naya password
-        // banate waqt (signup, reset) lagti hain, warna purane accounts jinke
-        // passwords in rules se pehle bane thay wo login hi nahi kar payenge.
         function checkPasswordFilled(password) {
             if (!password) {
                 alert("Password enter karna zaroori hai!");
@@ -498,7 +496,7 @@
                 localStorage.setItem('user_token', data.token || data.access_token || '');
                 localStorage.setItem('user_role', data.role || 'student');
                 localStorage.setItem('user_details', JSON.stringify(data.user || {}));
-                window.location.href = 'http://127.0.0.1:5500/student/student-dashboard.html';
+                window.location.href = 'student/student-dashboard.html';
             });
         }
 
@@ -541,7 +539,7 @@
                 localStorage.setItem('user_token', data.token || data.access_token || '');
                 localStorage.setItem('user_role', data.role || 'teacher');
                 localStorage.setItem('user_details', JSON.stringify(data.user || {}));
-                window.location.href = 'http://127.0.0.1:5500/teacher/teacher-dashboard.html';
+                window.location.href = 'teacher/teacher-dashboard.html';
             });
         }
 
@@ -561,7 +559,7 @@
                 localStorage.setItem('user_role', data.role || 'admin');
                 localStorage.setItem('user_details', JSON.stringify(data.user || {}));
                 
-                window.location.href = 'http://127.0.0.1:5500/admin/admin-dashboard.html';
+               window.location.href = 'admin/admin-dashboard.html';
             });
         }
     </script>

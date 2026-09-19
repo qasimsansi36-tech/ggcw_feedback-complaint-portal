@@ -344,3 +344,48 @@ body.page-admin .btn-action-trigger {
     justify-content: center;
     border: 1px solid #ccc;
 }
+
+/* =====================================================================
+   6) RESPONSIVE / MOBILE FIXES — applies to all pages (student/teacher/
+   admin/login). Nothing above this had any @media rules, so small
+   screens were overflowing.
+   ===================================================================== */
+@media (max-width: 768px) {
+    .exact-blue-topbar {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px 14px;
+    }
+    .exact-blue-topbar > div {
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        gap: 6px !important;
+    }
+    .exact-pill-btn {
+        padding: 5px 14px !important;
+        font-size: 0.8rem !important;
+    }
+    .exact-hero-overlay-text h2 { font-size: 1.3rem !important; }
+    .exact-hero-overlay-text { padding: 8px 18px !important; }
+    .main-title-text { font-size: 1.5rem !important; }
+    .card-header-title { font-size: 1.1rem !important; }
+    .main-institutional-crest { height: 100px !important; width: 100px !important; }
+
+    .exact-table th, .exact-table td {
+        padding: 8px 6px !important;
+        font-size: 0.8rem !important;
+    }
+    .btn-show-complaint {
+        font-size: 0.75rem !important;
+        padding: 3px 10px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .exact-back-nav-btn {
+        font-size: 0.85rem !important;
+    }
+    .exact-hero-overlay-text h2 { font-size: 1.1rem !important; }
+    .institutional-navbar .navbar-text { display: none; }
+}

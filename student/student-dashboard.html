@@ -206,7 +206,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const BACKEND_BASE_URL = 'http://127.0.0.1:8000/api';
+       const BACKEND_BASE_URL = 'http://127.0.0.1:8000/api';
         let complaintCount = 0;
         let feedbackCount = 0;
 
@@ -236,6 +236,17 @@
                 'Accept': 'application/json',
                 'Authorization': token ? `Bearer ${token}` : ''
             };
+        }
+
+        // ðŸ”’ SECURITY FIX: user ka bheja hua text (complaint description waghera)
+        // seedha HTML mein dikhane se pehle isay "escape" karna zaroori hai, warna
+        // koi bhi apne text mein HTML/script likh kar screen par apna code chala
+        // sakta tha (XSS attack).
+        function escapeHtml(str) {
+            return String(str ?? '').replace(/[&<>"']/g, function (ch) {
+                const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+                return map[ch];
+            });
         }
 
         window.addEventListener('popstate', (event) => {
@@ -294,7 +305,7 @@
         }
 
         function fetchHistoryFromBackend() {
-            fetch(`${BACKEND_BASE_URL}/student/complaints`, {
+            fetch(`${BACKEND_BASE_URL}/api/student/complaints`, {
                 method: 'GET',
                 headers: getAuthHeaders()
             })
@@ -308,19 +319,22 @@
                 complaintCount = 0;
                 feedbackCount = 0;
 
+                // ðŸ”’ SECURITY FIX: har item yahan save karte hain, table mein sirf
+                // index bhejte hain (onclick mein raw text nahi jata).
+                window.historyItems = [];
+
                 let list = Array.isArray(data) ? data : (data.complaints || data.data || []);
-                list.forEach(item => {
+                list.forEach((item, idx) => {
+                    window.historyItems[idx] = item;
                     let formattedDate = item.created_at ? new Date(item.created_at).toLocaleString() : 'N/A';
-                    let safeDesc = (item.description || item.details || '').replace(/'/g, "\\'").replace(/\n/g, ' ');
-                    let safeRemarks = (item.admin_remarks || '').replace(/'/g, "\\'").replace(/\n/g, ' ');
 
                     if (item.type === 'feedback' || item.category === 'Feedback') {
                         feedbackCount++;
                         let row = document.createElement('tr');
                         row.className = "exact-status-green";
                         row.innerHTML = `
-                            <td><button class="btn btn-show-complaint" onclick="viewFeedbackDetails('${formattedDate}', '${safeDesc}')">Show Feedback</button></td>
-                            <td>${formattedDate}</td>
+                            <td><button class="btn btn-show-complaint" onclick="viewFeedbackDetails(${idx})">Show Feedback</button></td>
+                            <td>${escapeHtml(formattedDate)}</td>
                             <td>Submitted</td>
                         `;
                         feedBody.appendChild(row);
@@ -334,10 +348,10 @@
                         let row = document.createElement('tr');
                         row.className = rowClass;
                         row.innerHTML = `
-                            <td><button class="btn btn-show-complaint" onclick="viewComplaintDetails('${item.category || 'General'}', '${formattedDate}', '${statusText}', '${safeDesc}', '${safeRemarks}')">Show Complaint</button></td>
-                            <td>${item.category || 'General'}</td>
-                            <td>${formattedDate}</td>
-                            <td>${statusText}</td>
+                            <td><button class="btn btn-show-complaint" onclick="viewComplaintDetails(${idx})">Show Complaint</button></td>
+                            <td>${escapeHtml(item.category || 'General')}</td>
+                            <td>${escapeHtml(formattedDate)}</td>
+                            <td>${escapeHtml(statusText)}</td>
                         `;
                         compBody.appendChild(row);
                     }
@@ -370,7 +384,7 @@
                 submitBtn.disabled = true;
                 submitBtn.innerText = "Submitting...";
 
-                fetch(`${BACKEND_BASE_URL}/student/complaints`, {
+                fetch(`${BACKEND_BASE_URL}/api/student/complaints`, {
                     method: 'POST',
                     headers: getAuthHeaders(),
                     body: formData
@@ -408,7 +422,7 @@
                 let headers = getAuthHeaders();
                 headers['Content-Type'] = 'application/json';
 
-                fetch(`${BACKEND_BASE_URL}/student/complaints`, {
+                fetch(`${BACKEND_BASE_URL}/api/student/complaints`, {
                     method: 'POST',
                     headers: headers,
                     body: payload
@@ -455,13 +469,20 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function viewComplaintDetails(category, date, status, desc, remarks) {
+        function viewComplaintDetails(idx) {
+            const item = window.historyItems[idx];
+            if (!item) return;
+            let formattedDate = item.created_at ? new Date(item.created_at).toLocaleString() : 'N/A';
+            let desc = item.description || item.details || '';
+            let remarks = item.admin_remarks || '';
+            let status = item.status || 'Unresolved';
+
             document.getElementById('modalMainTitle').innerHTML = '<i class="fas fa-file-alt me-2"></i> Complaint Details';
             document.getElementById('modalCategoryWrapper').style.display = 'block';
             document.getElementById('modalContentLabel').innerText = 'Complaint Statement:';
             
-            document.getElementById('modalCategory').innerText = category;
-            document.getElementById('modalDate').innerText = date;
+            document.getElementById('modalCategory').innerText = item.category || 'General';
+            document.getElementById('modalDate').innerText = formattedDate;
             document.getElementById('modalDescription').innerText = desc;
             
             const remarksContainer = document.getElementById('modalRemarksContainer');
@@ -483,13 +504,18 @@
             myModal.show();
         }
 
-        function viewFeedbackDetails(date, desc) {
+        function viewFeedbackDetails(idx) {
+            const item = window.historyItems[idx];
+            if (!item) return;
+            let formattedDate = item.created_at ? new Date(item.created_at).toLocaleString() : 'N/A';
+            let desc = item.description || item.details || '';
+
             document.getElementById('modalMainTitle').innerHTML = '<i class="fas fa-comment-alt me-2"></i> Feedback Details';
             document.getElementById('modalCategoryWrapper').style.display = 'none';
             document.getElementById('modalRemarksContainer').style.display = 'none';
             document.getElementById('modalContentLabel').innerText = 'Feedback Given:';
             
-            document.getElementById('modalDate').innerText = date;
+            document.getElementById('modalDate').innerText = formattedDate;
             document.getElementById('modalDescription').innerText = desc;
             
             const badge = document.getElementById('modalStatusBadge');
