@@ -8,54 +8,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ComplaintController extends Controller
 {
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'category' => 'required|string|max:255',
-            'description' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first(),
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $user = $request->user();
-
-        $complaint = Complaint::create([
-            'student_roll' => $user->roll_no,
-            'department' => $user->department,
-            'category' => $request->category,
-            'description' => $request->description,
-            'date_time' => now(),
-            'status' => 'Unresolved',
-            'admin_remarks' => null,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Complaint submitted successfully!',
-            'complaint' => $complaint
-        ], 201);
-    }
-
-    public function myComplaints(Request $request)
-    {
-        $user = $request->user();
-
-        $complaints = Complaint::where('student_roll', $user->roll_no)
-            ->orderBy('date_time', 'desc')
-            ->get();
-
-        return response()->json([
-            'success' => true,
-            'complaints' => $complaints
-        ]);
-    }
-
     public function studentStore(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -110,7 +62,7 @@ class ComplaintController extends Controller
         ]);
     }
 
-    // âœ… teacher khud complaint/feedback submit karta hai
+    // teacher khud complaint/feedback submit karta hai
     public function teacherSubmit(Request $request)
     {
         $user = $request->user();
@@ -153,7 +105,7 @@ class ComplaintController extends Controller
         ], 201);
     }
 
-    // âœ… teacher apne department ki saari complaints + apni history dekhta hai
+    // teacher apne department ki saari complaints + apni history dekhta hai
     public function teacherDepartmentComplaints(Request $request)
     {
         $user = $request->user();
@@ -177,10 +129,7 @@ class ComplaintController extends Controller
                     $item->display_name = $teacherUser ? $teacherUser->name : 'Teacher';
                     $item->type = ($item->category === 'Feedback') ? 'feedback' : 'teacher';
                 } else {
-                    // ðŸ”’ PRIVACY FIX: student ka asal naam/roll number teacher ko
-                    // kabhi nahi bhejna â€” sirf generic 'Student' label bhejna hai,
-                    // taake teacher kisi khaas student ki pehchan na jaan sake aur
-                    // bias na ho. (Pehle yahan asal student_roll bhej dete the.)
+                    
                     $item->display_name = 'Student';
                     $item->type = ($item->category === 'Feedback') ? 'feedback' : 'complaint';
                 }
@@ -194,7 +143,7 @@ class ComplaintController extends Controller
         ]);
     }
 
-    // âœ… teacher kisi complaint ka status/remarks update karta hai
+    // teacher kisi complaint ka status/remarks update karta hai
     public function teacherUpdateStatus(Request $request, $id)
     {
         $user = $request->user();

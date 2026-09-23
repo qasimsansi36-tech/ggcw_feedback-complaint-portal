@@ -10,19 +10,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
                $validator = Validator::make($request->all(), [
-            // ðŸ”’ SECURITY FIX: naam aur roll number mein ab sirf wahi
-            // characters allow hain jo frontend form pehle hi allow karta
-            // hai (letters/spaces naam ke liye, letters/numbers/-// roll
-            // ke liye) â€” is se koi bhi seedha API call karke ajeeb/harmful
-            // text save nahi kar sakta.
+            
             'name' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z]+(\s[A-Za-z]+)*$/'],
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
@@ -137,7 +131,7 @@ class AuthController extends Controller
             'message' => 'Logged out successfully!'
         ]);
     }
-
+// to confirm who is login
     public function profile(Request $request)
     {
         return response()->json([
