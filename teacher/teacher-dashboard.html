@@ -30,7 +30,7 @@
                     <button class="btn exact-pill-btn" onclick="showPersonalHistoryPanel(true)">
                         See Your History
                     </button>
-                    <a href="../index.html" class="btn exact-pill-btn btn-logout-pill d-flex align-items-center justify-content-center" onclick="localStorage.clear();">
+                    <a href="../index.html" class="btn exact-pill-btn btn-logout-pill d-flex align-items-center justify-content-center" onclick="logoutUser(event)">
                         <i class="fas fa-sign-out-alt"></i>
                     </a>
                 </div>
@@ -272,7 +272,22 @@
       const BACKEND_BASE_URL = 'http://127.0.0.1:8000/api';
         let pCompCount = 0;
         let pFeedCount = 0;
+function logoutUser(event) {
+    if (event) event.preventDefault();
+    const token = localStorage.getItem('user_token');
 
+    const finish = () => {
+        localStorage.clear();
+        window.location.href = '../index.html';
+    };
+
+    if (!token) { finish(); return; }
+
+    fetch(`${BACKEND_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${token}` }
+    }).finally(finish);
+}
         function getAuthHeaders() {
             const token = localStorage.getItem('user_token');
             return {
@@ -491,10 +506,7 @@ document.getElementById('deptCounter').innerText = data.filter(isStudentComplain
             const comp = window.teacherComplaints[idx];
             if (!comp) return;
 
-            // SECURITY FIX: teacher apni khud ki jama ki gayi complaint/feedback
-            // ka status ya remarks update NAHI kar sakta — sirf dekh sakta hai
-            // (jaise student apni complaint sirf dekh sakta hai). Sirf apne
-            // department ke students (ya dusron) ki complaints par action le sakta hai.
+            
             if (comp.is_mine) {
                 viewGenDetails(idx);
                 return;
