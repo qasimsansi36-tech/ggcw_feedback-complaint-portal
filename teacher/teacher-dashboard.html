@@ -281,6 +281,10 @@
                 'Authorization': token ? `Bearer ${token}` : ''
             };
         }
+        function isStudentComplaint(c) {
+    const roll = String(c.student_roll || '');
+    return !c.is_mine && c.type !== 'teacher' && !roll.startsWith('TEACHER:');
+}
 
         function escapeHtml(str) {
             return String(str ?? '').replace(/[&<>"']/g, function (ch) {
@@ -335,10 +339,7 @@
                     let formattedDate = dbDate ? new Date(dbDate).toLocaleString() : 'N/A';
                     let identityText = comp.display_name || comp.student_roll || comp.user_name || (comp.user ? comp.user.name : 'Teacher');
 
-                    // Department Complaints table mein sirf DOOSRON (students) ki
-                    // complaints dikhengi — teacher ki apni complaints sirf
-                    // "See Your History" tab mein dikhengi, is table mein nahi.
-                    if (!comp.is_mine) {
+                    if (isStudentComplaint(comp)) {
                         const row = `
                             <tr id="row-comp-${comp.id}" class="${statusClass}">
                                 <td><button class="btn btn-show-complaint text-nowrap" onclick="manageComplaint(${idx})">Show Complaint</button></td>
@@ -352,11 +353,11 @@
                         body.innerHTML += row;
                     }
 
-                    if (comp.is_mine || comp.type === 'teacher' || comp.user_id == localStorage.getItem('user_id')) {
+if (comp.is_mine) {
                         if (comp.category === 'Feedback' || comp.type === 'feedback') {
                             pFeedCount++;
                             const fRow = `
-                                <tr class="${statusClass}">
+                                <tr class="exact-status-green">
                                     <td><button class="btn btn-show-complaint text-nowrap" onclick="viewGenDetails(${idx})">View Feedback</button></td>
                                     <td>${escapeHtml(formattedDate)}</td>
                                     <td class="fw-bold">${escapeHtml(comp.status || 'Submitted')}</td>
@@ -378,10 +379,8 @@
                     }
                 });
 
-                // Counter bhi sirf students ki complaints ka count dikhaye, teacher
-                // ki apni complaints is number mein shamil na hon.
-                document.getElementById('deptCounter').innerText = data.filter(c => !c.is_mine).length;
-
+            
+document.getElementById('deptCounter').innerText = data.filter(isStudentComplaint).length;
                 updatePersonalEmptyPlaceholders();
             })
             .catch(err => console.error("Error loading data:", err));
